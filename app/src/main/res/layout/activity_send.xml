@@ -160,11 +160,11 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_rounded"
+        android:background="@drawable/button_rounded_secondary"
         android:enabled="false"
         android:text="Mark as Messaged"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/green_deep"
         android:textStyle="bold" />
 
 </LinearLayout>
