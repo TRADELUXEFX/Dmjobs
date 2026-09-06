@@ -7,6 +7,8 @@
         <item name="colorSecondary">@color/green</item>
         <item name="android:statusBarColor">@color/green_deep</item>
         <item name="android:windowBackground">@color/bg</item>
+        <item name="android:fontFamily">@font/baloo2</item>
+        <item name="fontFamily">@font/baloo2</item>
     </style>
 
     <style name="RowLabel">
