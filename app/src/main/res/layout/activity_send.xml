@@ -100,35 +100,15 @@
 
             <LinearLayout
                 android:id="@+id/s_countdown"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:gravity="center"
-                android:orientation="horizontal"
-                android:visibility="gone">
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Wait "
-                    android:textColor="@color/text_muted"
-                    android:textSize="13sp" />
-
-                <TextView
-                    android:id="@+id/s_timer"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/amber"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="s before marking as sent"
-                    android:textColor="@color/text_muted"
-                    android:textSize="13sp" />
-            </LinearLayout>
+            <TextView
+                android:id="@+id/s_timer"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/send_error"
@@ -162,7 +142,7 @@
         android:layout_marginTop="10dp"
         android:background="@drawable/button_mark_outline_disabled"
         android:enabled="false"
-        android:text="Mark as Messaged"
+        android:text="Mark as Sent"
         android:textAllCaps="false"
         android:textColor="#B4B2A9"
         android:textStyle="bold" />
