@@ -16,6 +16,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="32dp"
             android:layout_marginBottom="24dp"
+            android:gravity="center"
             android:text="DM Jobs"
             android:textColor="@color/green_deep"
             android:textSize="26sp"
@@ -36,8 +37,9 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:gravity="center"
                     android:text="Your Phone Number"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp"
@@ -57,17 +59,19 @@
                     android:textSize="15sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
+                    android:gravity="center"
                     android:text="11 digits, starting with 0 (e.g. 08012345678)"
                     android:textColor="@color/text_muted"
                     android:textSize="11sp" />
 
                 <TextView
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="14dp"
+                    android:gravity="center"
                     android:text="Job Code"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp"
@@ -93,6 +97,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
                     android:background="@drawable/error_bg"
+                    android:gravity="center"
                     android:padding="10dp"
                     android:textColor="@color/red"
                     android:textSize="13sp"
@@ -120,16 +125,16 @@
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
-        <TextView
+        <Button
+            android:id="@+id/btn_no_job"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="52dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/info_bg"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="Don't have a job code? Contact your admin to get assigned to a job."
-            android:textColor="@color/green_dark"
-            android:textSize="12sp" />
+            android:background="@drawable/button_rounded_wa"
+            android:text="Don't have a job? Contact admin"
+            android:textAllCaps="false"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </ScrollView>
