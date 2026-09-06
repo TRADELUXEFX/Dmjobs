@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dmjobs</string>
-    <string name="accessibility_service_description">Allows Dmjobs to automatically tap Send in WhatsApp after the wait timer finishes, so you don\'t have to tap it yourself.</string>
 </resources>
