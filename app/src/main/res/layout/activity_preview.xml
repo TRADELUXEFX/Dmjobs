@@ -32,6 +32,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="14dp"
             app:cardElevation="2dp">
 
@@ -95,7 +96,7 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:layout_marginTop="24dp"
-            android:backgroundTint="@color/green_deep"
+            android:background="@drawable/button_rounded"
             android:text="Accept Job"
             android:textAllCaps="false"
             android:textColor="@color/white"
