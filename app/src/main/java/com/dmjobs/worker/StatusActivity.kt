@@ -95,7 +95,7 @@ class StatusActivity : AppCompatActivity() {
         val jobCode = job?.optString("job_code", "???") ?: "???"
         val username = Session.username
 
-        val pay = job?.optDouble("pay", 0.0) ?: 0.0
+        val pay = job?.optDouble("pay_per_dm", 0.0) ?: 0.0
         val sentToday = Session.sentToday
         val earnedToday = pay * sentToday
         earnedView.text = if (earnedToday > 0) "₦${"%,.0f".format(earnedToday)}" else "₦0"
