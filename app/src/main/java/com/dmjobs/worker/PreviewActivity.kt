@@ -91,6 +91,7 @@ class PreviewActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btn_reject).setOnClickListener {
             Session.job = null
+            Session.persist()
             finish()
         }
     }
