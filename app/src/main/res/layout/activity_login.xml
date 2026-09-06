@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="24dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="32dp"
+            android:layout_marginBottom="24dp"
+            android:text="DM Jobs"
+            android:textColor="@color/green_deep"
+            android:textSize="26sp"
+            android:textStyle="bold" />
+
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="4dp"
+            xmlns:app="http://schemas.android.com/apk/res-auto">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="20dp">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Worker Portal"
+                    android:textColor="@color/text"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Enter your phone number and job code to begin"
+                    android:textColor="@color/text_muted"
+                    android:textSize="13sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Your Phone Number"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/inp_username"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/input_bg"
+                    android:hint="e.g. 08012345678"
+                    android:inputType="phone"
+                    android:maxLength="11"
+                    android:paddingHorizontal="14dp"
+                    android:textSize="15sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="4dp"
+                    android:text="11 digits, starting with 0 (e.g. 08012345678)"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="14dp"
+                    android:text="Job Code"
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp"
+                    android:textStyle="bold" />
+
+                <EditText
+                    android:id="@+id/inp_jobcode"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="6dp"
+                    android:background="@drawable/input_bg"
+                    android:gravity="center"
+                    android:hint="G2XXL3"
+                    android:inputType="textCapCharacters"
+                    android:letterSpacing="0.2"
+                    android:maxLength="8"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/login_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/error_bg"
+                    android:padding="10dp"
+                    android:textColor="@color/red"
+                    android:textSize="13sp"
+                    android:visibility="gone" />
+
+                <Button
+                    android:id="@+id/btn_login"
+                    android:layout_width="match_parent"
+                    android:layout_height="52dp"
+                    android:layout_marginTop="16dp"
+                    android:backgroundTint="@color/green_deep"
+                    android:text="Find My Job"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white"
+                    android:textStyle="bold" />
+
+                <ProgressBar
+                    android:id="@+id/login_progress"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone" />
+
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/info_bg"
+            android:gravity="center"
+            android:padding="12dp"
+            android:text="Don't have a job code? Contact your admin to get assigned to a job."
+            android:textColor="@color/green_dark"
+            android:textSize="12sp" />
+
+    </LinearLayout>
+</ScrollView>
