@@ -232,11 +232,6 @@ class SendActivity : AppCompatActivity() {
         val msg = Session.job?.optString("message", "") ?: ""
         val uri = Uri.parse("https://wa.me/$phone?text=${Uri.encode(msg)}")
 
-        if (isAutoSendEnabled()) {
-            WhatsAppSendService.pendingAutoSend = true
-            WhatsAppSendService.countdownFinished = false
-        }
-
         startActivity(Intent(Intent.ACTION_VIEW, uri))
 
         waOpened = true
@@ -244,16 +239,6 @@ class SendActivity : AppCompatActivity() {
         btnWa.setBackgroundResource(R.drawable.button_rounded_wa)
         btnWa.setTextColor(resources.getColor(R.color.white, theme))
         startCountdown(Session.job?.optInt("rate_limit_seconds", 10) ?: 10)
-    }
-
-    // Checks whether the user has manually enabled our accessibility service in
-    // Settings > Accessibility. This cannot be turned on from code.
-    private fun isAutoSendEnabled(): Boolean {
-        val enabledServices = android.provider.Settings.Secure.getString(
-            contentResolver,
-            android.provider.Settings.Secure.ENABLED_ACCESSIBILITY_SERVICES
-        ) ?: return false
-        return enabledServices.contains("${packageName}/${packageName}.WhatsAppSendService")
     }
 
     private fun startCountdown(secs: Int) {
@@ -291,15 +276,6 @@ class SendActivity : AppCompatActivity() {
                 btnMark.setBackgroundResource(R.drawable.button_rounded_secondary)
                 btnMark.setTextColor(resources.getColor(R.color.green_deep, theme))
                 setChip("ready")
-
-                if (isAutoSendEnabled() && WhatsAppSendService.pendingAutoSend) {
-                    WhatsAppSendService.countdownFinished = true
-                    // Give the accessibility service a moment to find and tap Send,
-                    // then proceed exactly as if the worker had tapped Mark as Sent.
-                    android.os.Handler(android.os.Looper.getMainLooper()).postDelayed({
-                        markMessaged()
-                    }, 1500)
-                }
             }
         }.start()
     }
