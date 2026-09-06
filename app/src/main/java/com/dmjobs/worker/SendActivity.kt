@@ -4,6 +4,8 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
+import android.text.SpannableString
+import android.text.style.ForegroundColorSpan
 import android.widget.Button
 import android.widget.ProgressBar
 import android.widget.TextView
@@ -59,6 +61,16 @@ class SendActivity : AppCompatActivity() {
         btnMark.setOnClickListener { markMessaged() }
 
         lockNextContact()
+    }
+
+    // Colors only the button-name phrase inside sMeta's sentence, rest stays text_muted
+    private fun setMetaWithHighlight(full: String, highlight: String, color: Int) {
+        val span = SpannableString(full)
+        val start = full.indexOf(highlight)
+        if (start >= 0) {
+            span.setSpan(ForegroundColorSpan(color), start, start + highlight.length, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        sMeta.text = span
     }
 
     private fun showError(msg: String) {
@@ -175,7 +187,12 @@ class SendActivity : AppCompatActivity() {
         }
         val phone = c.optString("phone_number", "").replace(Regex("\\D"), "")
         sPhone.text = maskPhone(phone)
-        sMeta.text = "Tap Open WhatsApp to send the message"
+        sMeta.setTextColor(resources.getColor(R.color.text_muted, theme))
+        setMetaWithHighlight(
+            "Tap Open WhatsApp to send the message",
+            "Open WhatsApp",
+            resources.getColor(R.color.green, theme)
+        )
         waOpened = false
         countdownTimer?.cancel()
         sCountdownRow.visibility = android.view.View.GONE
@@ -215,17 +232,29 @@ class SendActivity : AppCompatActivity() {
         countdownTimer?.cancel()
         sCountdownRow.visibility = android.view.View.VISIBLE
         sTimer.text = secs.toString()
-        sMeta.text = "Wait ${secs}s then tap Mark as Messaged"
+        setMetaWithHighlight(
+            "Wait ${secs}s then tap Mark as Sent",
+            "Mark as Sent",
+            resources.getColor(R.color.amber, theme)
+        )
 
         countdownTimer = object : CountDownTimer((secs * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
                 val secsLeft = (millisUntilFinished / 1000) + 1
                 sTimer.text = secsLeft.toString()
-                sMeta.text = "Wait ${secsLeft}s then tap Mark as Messaged"
+                setMetaWithHighlight(
+                    "Wait ${secsLeft}s then tap Mark as Sent",
+                    "Mark as Sent",
+                    resources.getColor(R.color.amber, theme)
+                )
             }
             override fun onFinish() {
                 sCountdownRow.visibility = android.view.View.GONE
-                sMeta.text = "Tap Mark as Messaged"
+                setMetaWithHighlight(
+                    "Tap Mark as Sent",
+                    "Mark as Sent",
+                    resources.getColor(R.color.amber, theme)
+                )
                 btnMark.isEnabled = true
                 btnMark.setBackgroundResource(R.drawable.button_rounded_secondary)
                 btnMark.setTextColor(resources.getColor(R.color.green_deep, theme))
