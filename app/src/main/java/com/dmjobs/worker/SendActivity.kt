@@ -63,12 +63,24 @@ class SendActivity : AppCompatActivity() {
         lockNextContact()
     }
 
-    // Colors only the button-name phrase inside sMeta's sentence, rest stays text_muted
-    private fun setMetaWithHighlight(full: String, highlight: String, color: Int) {
+    // Colors the button-name phrase and, optionally, a second span (e.g. the countdown number)
+    private fun setMetaWithHighlight(
+        full: String,
+        highlight: String,
+        color: Int,
+        highlight2: String? = null,
+        color2: Int = 0
+    ) {
         val span = SpannableString(full)
         val start = full.indexOf(highlight)
         if (start >= 0) {
             span.setSpan(ForegroundColorSpan(color), start, start + highlight.length, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+        }
+        if (highlight2 != null) {
+            val start2 = full.indexOf(highlight2)
+            if (start2 >= 0) {
+                span.setSpan(ForegroundColorSpan(color2), start2, start2 + highlight2.length, android.text.Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
         }
         sMeta.text = span
     }
@@ -235,7 +247,9 @@ class SendActivity : AppCompatActivity() {
         setMetaWithHighlight(
             "Wait ${secs}s then tap Mark as Sent",
             "Mark as Sent",
-            resources.getColor(R.color.amber, theme)
+            resources.getColor(R.color.amber, theme),
+            "${secs}s",
+            resources.getColor(R.color.blue, theme)
         )
 
         countdownTimer = object : CountDownTimer((secs * 1000).toLong(), 1000) {
@@ -245,7 +259,9 @@ class SendActivity : AppCompatActivity() {
                 setMetaWithHighlight(
                     "Wait ${secsLeft}s then tap Mark as Sent",
                     "Mark as Sent",
-                    resources.getColor(R.color.amber, theme)
+                    resources.getColor(R.color.amber, theme),
+                    "${secsLeft}s",
+                    resources.getColor(R.color.blue, theme)
                 )
             }
             override fun onFinish() {
