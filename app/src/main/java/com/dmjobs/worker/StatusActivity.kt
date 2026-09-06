@@ -4,7 +4,6 @@ import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
-import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
@@ -85,19 +84,25 @@ class StatusActivity : AppCompatActivity() {
     }
 
     private fun render(mode: String) {
-        val icon = findViewById<ImageView>(R.id.status_icon)
         val title = findViewById<TextView>(R.id.status_title)
         val body = findViewById<TextView>(R.id.status_body)
         val btnWa = findViewById<Button>(R.id.btn_wa_action)
         val btnBack = findViewById<Button>(R.id.btn_back)
+        val earnedView = findViewById<TextView>(R.id.status_earned)
+        val sentCountView = findViewById<TextView>(R.id.status_sent_count)
 
         val job = Session.job
         val jobCode = job?.optString("job_code", "???") ?: "???"
         val username = Session.username
 
+        val pay = job?.optDouble("pay", 0.0) ?: 0.0
+        val sentToday = Session.sentToday
+        val earnedToday = pay * sentToday
+        earnedView.text = if (earnedToday > 0) "₦${"%,.0f".format(earnedToday)}" else "₦0"
+        sentCountView.text = sentToday.toString()
+
         when (mode) {
             "pending" -> {
-                icon.setImageResource(R.drawable.ic_pending)
                 title.text = "Awaiting Approval"
                 body.text = "You're registered for this job but need admin approval before you can start sending."
                 btnWa.text = "Message Admin to Get Approved"
@@ -107,17 +112,15 @@ class StatusActivity : AppCompatActivity() {
                 }
             }
             "blocked" -> {
-                icon.setImageResource(R.drawable.ic_blocked)
                 title.text = "Daily Limit Reached"
                 body.text = "You've hit today's sending limit. Message admin to get re-approved for your next batch."
-                btnWa.text = "Send Daily Proof / Request More"
+                btnWa.text = "Send proof"
                 btnWa.setOnClickListener {
                     val msg = "Hi, I have completed my DM batch for job $jobCode. My number is $username. Please re-approve me to continue."
                     openWhatsApp(msg)
                 }
             }
             "banned" -> {
-                icon.setImageResource(R.drawable.ic_banned)
                 title.text = "Account Banned"
                 body.text = "This phone number has been banned from all jobs. Contact admin if you believe this is a mistake."
                 btnWa.text = "Contact Admin"
@@ -127,7 +130,6 @@ class StatusActivity : AppCompatActivity() {
                 }
             }
             "done" -> {
-                icon.setImageResource(R.drawable.ic_done)
                 title.text = "Job Complete!"
                 body.text = "All contacts for this job have been messaged. Contact admin for a new job code."
                 btnWa.text = "Request New Job"
