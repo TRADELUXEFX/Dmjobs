@@ -12,18 +12,10 @@
         android:padding="20dp">
 
         <TextView
-            android:id="@+id/prev_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textColor="@color/green_deep"
-            android:textSize="13sp"
-            android:textStyle="bold" />
-
-        <TextView
             android:id="@+id/prev_title"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
+            android:gravity="center"
             android:textColor="@color/text"
             android:textSize="20sp"
             android:textStyle="bold" />
@@ -42,23 +34,119 @@
                 android:orientation="vertical"
                 android:padding="16dp">
 
-                <TextView style="@style/RowLabel" android:text="Total Contacts" />
-                <TextView android:id="@+id/prev_total" style="@style/RowValue" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowLabel" android:text="Total Contacts" />
+                        <TextView android:id="@+id/prev_total" style="@style/RowValue" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#E2E8F0" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowLabel" android:text="Available Now" />
+                        <TextView android:id="@+id/prev_available" style="@style/RowValue" android:textColor="@color/green_deep" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <View style="@style/Divider" />
 
-                <TextView style="@style/RowLabel" android:text="Pay per DM" />
-                <TextView android:id="@+id/prev_pay" style="@style/RowValue" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
 
-                <View style="@style/Divider" />
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
 
-                <TextView style="@style/RowLabel" android:text="Max Earning" />
-                <TextView android:id="@+id/prev_max" style="@style/RowValue" />
+                        <TextView style="@style/RowLabel" android:text="Pay per DM" />
+                        <TextView android:id="@+id/prev_pay" style="@style/RowValue" />
+                    </LinearLayout>
+
+                    <View
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:background="#E2E8F0" />
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:layout_marginStart="16dp"
+                        android:orientation="vertical">
+
+                        <TextView style="@style/RowLabel" android:text="Max Earning" />
+                        <TextView android:id="@+id/prev_max" style="@style/RowValue" />
+                    </LinearLayout>
+                </LinearLayout>
 
                 <View style="@style/Divider" />
 
                 <TextView style="@style/RowLabel" android:text="Daily Limit" />
                 <TextView android:id="@+id/prev_daily" style="@style/RowValue" />
+
+                <View style="@style/Divider" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:background="@drawable/earning_highlight_bg"
+                    android:padding="12dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="DAILY EARNING TOTAL"
+                            android:textColor="@color/green_deep"
+                            android:textSize="11sp"
+                            android:textStyle="bold"
+                            android:textAllCaps="true" />
+
+                        <TextView
+                            android:id="@+id/prev_daily_earning_breakdown"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="2dp"
+                            android:textColor="@color/green"
+                            android:textSize="11sp" />
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/prev_daily_earning"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/green_deep"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
@@ -81,15 +169,35 @@
             android:textSize="12sp"
             android:textStyle="bold" />
 
-        <TextView
-            android:id="@+id/prev_msg"
+        <androidx.core.widget.NestedScrollView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
+            android:maxHeight="110dp"
             android:background="@drawable/input_bg"
-            android:padding="14dp"
-            android:textColor="@color/text"
-            android:textSize="14sp" />
+            android:scrollbars="vertical"
+            android:fillViewport="false">
+
+            <TextView
+                android:id="@+id/prev_msg"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="14dp"
+                android:textColor="@color/text"
+                android:textSize="14sp" />
+        </androidx.core.widget.NestedScrollView>
+
+        <TextView
+            android:id="@+id/prev_sold_out"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:background="@drawable/error_bg"
+            android:padding="10dp"
+            android:text="All contacts on this job are already taken"
+            android:textColor="@color/red"
+            android:textSize="12sp"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btn_accept"
