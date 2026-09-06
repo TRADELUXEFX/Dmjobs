@@ -15,12 +15,14 @@ class StatusActivity : AppCompatActivity() {
 
     private var currentMode: String = "pending"
 
+    private var isFetchingCount = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_status)
 
         currentMode = intent.getStringExtra("mode") ?: "pending"
-        render(currentMode)
+        render(currentMode, fetchCount = false)
     }
 
     override fun onResume() {
@@ -83,7 +85,7 @@ class StatusActivity : AppCompatActivity() {
         }
     }
 
-    private fun render(mode: String) {
+    private fun render(mode: String, fetchCount: Boolean = true) {
         val title = findViewById<TextView>(R.id.status_title)
         val body = findViewById<TextView>(R.id.status_body)
         val btnWa = findViewById<Button>(R.id.btn_wa_action)
@@ -96,11 +98,13 @@ class StatusActivity : AppCompatActivity() {
         val username = Session.username
 
         val pay = job?.optDouble("pay_per_dm", 0.0) ?: 0.0
-        earnedView.text = "₦0"
+        val earnedNow = pay * Session.sentToday
+        earnedView.text = if (earnedNow > 0) "₦${"%,.0f".format(earnedNow)}" else "₦0"
         sentCountView.text = Session.sentToday.toString()
 
         val jobId = job?.optString("id", "") ?: ""
-        if (jobId.isNotEmpty() && username.isNotEmpty()) {
+        if (fetchCount && !isFetchingCount && jobId.isNotEmpty() && username.isNotEmpty()) {
+            isFetchingCount = true
             lifecycleScope.launch {
                 try {
                     val realSentToday = withContext(Dispatchers.IO) {
@@ -112,6 +116,8 @@ class StatusActivity : AppCompatActivity() {
                     sentCountView.text = realSentToday.toString()
                 } catch (e: Exception) {
                     // Keep showing the last-known local value if the server check fails
+                } finally {
+                    isFetchingCount = false
                 }
             }
         }
