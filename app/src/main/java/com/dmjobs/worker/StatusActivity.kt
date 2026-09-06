@@ -96,10 +96,25 @@ class StatusActivity : AppCompatActivity() {
         val username = Session.username
 
         val pay = job?.optDouble("pay_per_dm", 0.0) ?: 0.0
-        val sentToday = Session.sentToday
-        val earnedToday = pay * sentToday
-        earnedView.text = if (earnedToday > 0) "₦${"%,.0f".format(earnedToday)}" else "₦0"
-        sentCountView.text = sentToday.toString()
+        earnedView.text = "₦0"
+        sentCountView.text = Session.sentToday.toString()
+
+        val jobId = job?.optString("id", "") ?: ""
+        if (jobId.isNotEmpty() && username.isNotEmpty()) {
+            lifecycleScope.launch {
+                try {
+                    val realSentToday = withContext(Dispatchers.IO) {
+                        Supabase.countSentToday(username, jobId)
+                    }
+                    Session.sentToday = realSentToday
+                    val earnedToday = pay * realSentToday
+                    earnedView.text = if (earnedToday > 0) "₦${"%,.0f".format(earnedToday)}" else "₦0"
+                    sentCountView.text = realSentToday.toString()
+                } catch (e: Exception) {
+                    // Keep showing the last-known local value if the server check fails
+                }
+            }
+        }
 
         when (mode) {
             "pending" -> {
