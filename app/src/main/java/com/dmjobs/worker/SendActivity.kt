@@ -76,7 +76,7 @@ class SendActivity : AppCompatActivity() {
     private fun setChip(state: String) {
         when (state) {
             "pending" -> { sChip.setBackgroundResource(R.drawable.chip_pending); sChip.text = "Pending" }
-            "opened" -> { sChip.setBackgroundResource(R.drawable.chip_opened); sChip.text = "Opened ✓" }
+            "opened" -> { sChip.setBackgroundResource(R.drawable.chip_opened); sChip.text = "Opened"; sChip.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_check_small, 0); sChip.compoundDrawablePadding = 6 }
             "ready" -> { sChip.setBackgroundResource(R.drawable.chip_ready); sChip.text = "Ready to Mark" }
         }
     }
@@ -180,6 +180,10 @@ class SendActivity : AppCompatActivity() {
         countdownTimer?.cancel()
         sCountdownRow.visibility = android.view.View.GONE
         btnMark.isEnabled = false
+        btnWa.setBackgroundResource(R.drawable.button_wa_outline)
+        btnWa.setTextColor(resources.getColor(R.color.green, theme))
+        btnMark.setBackgroundResource(R.drawable.button_mark_outline_disabled)
+        btnMark.setTextColor(android.graphics.Color.parseColor("#B4B2A9"))
         setChip("pending")
         showError("")
     }
@@ -202,6 +206,8 @@ class SendActivity : AppCompatActivity() {
 
         waOpened = true
         setChip("opened")
+        btnWa.setBackgroundResource(R.drawable.button_rounded_wa)
+        btnWa.setTextColor(resources.getColor(R.color.white, theme))
         startCountdown(Session.job?.optInt("rate_limit_seconds", 10) ?: 10)
     }
 
@@ -217,6 +223,8 @@ class SendActivity : AppCompatActivity() {
             override fun onFinish() {
                 sCountdownRow.visibility = android.view.View.GONE
                 btnMark.isEnabled = true
+                btnMark.setBackgroundResource(R.drawable.button_rounded_secondary)
+                btnMark.setTextColor(resources.getColor(R.color.green_deep, theme))
                 setChip("ready")
             }
         }.start()
@@ -226,6 +234,8 @@ class SendActivity : AppCompatActivity() {
     private fun markMessaged() {
         if (!waOpened) return
         btnMark.isEnabled = false
+        btnMark.setBackgroundResource(R.drawable.button_rounded)
+        btnMark.setTextColor(resources.getColor(R.color.white, theme))
 
         val c = Session.currentContact ?: return
         val contactId = c.getString("id")
