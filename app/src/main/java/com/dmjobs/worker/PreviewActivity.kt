@@ -46,7 +46,12 @@ class PreviewActivity : AppCompatActivity() {
         val soldOutNotice = findViewById<TextView>(R.id.prev_sold_out)
         val btnAccept = findViewById<Button>(R.id.btn_accept)
 
-        prevAvailable.text = "…"
+        prevAvailable.text = ""
+        prevAvailable.minHeight = (18 * resources.displayMetrics.density).toInt()
+        prevAvailable.setBackgroundResource(R.drawable.skeleton_bar)
+        prevMax.text = ""
+        prevMax.minHeight = (18 * resources.displayMetrics.density).toInt()
+        prevMax.setBackgroundResource(R.drawable.skeleton_bar)
         btnAccept.isEnabled = false
 
         lifecycleScope.launch {
@@ -62,6 +67,7 @@ class PreviewActivity : AppCompatActivity() {
                 totalContacts // fall back to total if the count fails, rather than blocking the worker
             }
 
+            prevAvailable.background = null
             prevAvailable.text = available.toString()
             prevAvailable.setTextColor(
                 resources.getColor(if (available > 0) R.color.green_deep else R.color.red, theme)
@@ -69,6 +75,7 @@ class PreviewActivity : AppCompatActivity() {
 
             // Max Earning reflects what's actually claimable right now, not the job's original total
             val maxEarn = if (pay > 0 && available > 0) "₦${"%,.0f".format(pay * available)}" else "—"
+            prevMax.background = null
             prevMax.text = maxEarn
 
             if (available <= 0) {
