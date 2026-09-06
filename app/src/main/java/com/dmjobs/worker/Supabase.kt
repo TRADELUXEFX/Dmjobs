@@ -61,8 +61,7 @@ object Supabase {
         }
     }
 
-    /**
-     * UPDATE — `query` selects which rows (e.g. "id=eq.123&status=eq.pending").
+    /** UPDATE — `query` selects which rows (e.g. "id=eq.123&status=eq.pending").
      * Returns true if at least one row was updated (checked via return=representation).
      */
     fun update(table: String, query: String, jsonBody: JSONObject): JSONArray {
@@ -74,5 +73,16 @@ object Supabase {
             if (!resp.isSuccessful) throw RuntimeException("Update failed (${resp.code}): $body")
             return JSONArray(body)
         }
+    }
+
+    /** Returns how many messages this worker has actually sent today for this job, per the server. */
+    fun countSentToday(phone: String, jobId: String): Int {
+        val sdf = java.text.SimpleDateFormat("yyyy-MM-dd'T'00:00:00.000'Z'", java.util.Locale.US)
+        sdf.timeZone = java.util.TimeZone.getTimeZone("UTC")
+        val todayStart = sdf.format(java.util.Date())
+        return select(
+            "wdmj_message_logs",
+            "sent_by=eq.$phone&job_id=eq.$jobId&created_at=gte.$todayStart&select=id"
+        ).length()
     }
 }
