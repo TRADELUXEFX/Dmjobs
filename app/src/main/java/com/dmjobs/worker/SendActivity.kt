@@ -175,7 +175,7 @@ class SendActivity : AppCompatActivity() {
         }
         val phone = c.optString("phone_number", "").replace(Regex("\\D"), "")
         sPhone.text = maskPhone(phone)
-        sMeta.text = "Locked to you — send this DM now"
+        sMeta.text = "Tap Open WhatsApp to send the message"
         waOpened = false
         countdownTimer?.cancel()
         sCountdownRow.visibility = android.view.View.GONE
@@ -215,13 +215,17 @@ class SendActivity : AppCompatActivity() {
         countdownTimer?.cancel()
         sCountdownRow.visibility = android.view.View.VISIBLE
         sTimer.text = secs.toString()
+        sMeta.text = "Wait ${secs}s then tap Mark as Messaged"
 
         countdownTimer = object : CountDownTimer((secs * 1000).toLong(), 1000) {
             override fun onTick(millisUntilFinished: Long) {
-                sTimer.text = ((millisUntilFinished / 1000) + 1).toString()
+                val secsLeft = (millisUntilFinished / 1000) + 1
+                sTimer.text = secsLeft.toString()
+                sMeta.text = "Wait ${secsLeft}s then tap Mark as Messaged"
             }
             override fun onFinish() {
                 sCountdownRow.visibility = android.view.View.GONE
+                sMeta.text = "Tap Mark as Messaged"
                 btnMark.isEnabled = true
                 btnMark.setBackgroundResource(R.drawable.button_rounded_secondary)
                 btnMark.setTextColor(resources.getColor(R.color.green_deep, theme))
