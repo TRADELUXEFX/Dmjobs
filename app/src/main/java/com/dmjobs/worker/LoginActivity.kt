@@ -27,6 +27,8 @@ class LoginActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
 
+        Session.init(this)
+
         inpUsername = findViewById(R.id.inp_username)
         inpJobcode = findViewById(R.id.inp_jobcode)
         errorText = findViewById(R.id.login_error)
@@ -39,6 +41,73 @@ class LoginActivity : AppCompatActivity() {
             val msg = "Hi, I don't have a job code yet. Please assign me to a job."
             val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
             startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+
+        // Resume a saved session instead of forcing re-login after the app was closed/killed.
+        if (Session.hasSavedSession()) {
+            setLoading(true)
+            resumeSavedSession()
+        }
+    }
+
+    private fun resumeSavedSession() {
+        val job = Session.job ?: return
+        val phone = Session.username
+        val jobId = job.optString("id", "")
+        if (jobId.isEmpty()) { setLoading(false); return }
+
+        lifecycleScope.launch {
+            try {
+                val banCheck = withContext(Dispatchers.IO) {
+                    Supabase.select(
+                        "wdmj_worker_status",
+                        "phone=eq.$phone&status=eq.banned&select=status&limit=1"
+                    )
+                }
+                if (banCheck.length() > 0) {
+                    startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
+                        putExtra("mode", "banned")
+                    })
+                    setLoading(false)
+                    return@launch
+                }
+
+                val statusRows = withContext(Dispatchers.IO) {
+                    Supabase.select(
+                        "wdmj_worker_status",
+                        "phone=eq.$phone&job_id=eq.$jobId&select=status"
+                    )
+                }
+
+                if (statusRows.length() > 0) {
+                    val status = statusRows.getJSONObject(0).getString("status")
+                    when (status) {
+                        "pending" -> {
+                            startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
+                                putExtra("mode", "pending")
+                            })
+                            setLoading(false)
+                            return@launch
+                        }
+                        "blocked" -> {
+                            startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
+                                putExtra("mode", "blocked")
+                            })
+                            setLoading(false)
+                            return@launch
+                        }
+                        // "active" — fall through to send screen
+                    }
+                }
+
+                // Active — go straight back to sending, skipping the preview screen on resume
+                startActivity(Intent(this@LoginActivity, SendActivity::class.java))
+                setLoading(false)
+
+            } catch (e: Exception) {
+                // Couldn't verify — fall back to manual login rather than getting stuck
+                setLoading(false)
+            }
         }
     }
 
@@ -83,6 +152,7 @@ class LoginActivity : AppCompatActivity() {
 
                 Session.username = cleanPhone
                 Session.job = job
+                Session.persist()
 
                 // 2. Check if banned across ANY job
                 val banCheck = withContext(Dispatchers.IO) {
