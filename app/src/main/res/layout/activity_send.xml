@@ -149,10 +149,10 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginTop="20dp"
-        android:background="@drawable/button_rounded_wa"
+        android:background="@drawable/button_wa_outline"
         android:text="Open WhatsApp"
         android:textAllCaps="false"
-        android:textColor="@color/white"
+        android:textColor="@color/green"
         android:textStyle="bold" />
 
     <Button
@@ -160,11 +160,11 @@
         android:layout_width="match_parent"
         android:layout_height="54dp"
         android:layout_marginTop="10dp"
-        android:background="@drawable/button_rounded_secondary"
+        android:background="@drawable/button_mark_outline_disabled"
         android:enabled="false"
         android:text="Mark as Messaged"
         android:textAllCaps="false"
-        android:textColor="@color/green_deep"
+        android:textColor="#B4B2A9"
         android:textStyle="bold" />
 
 </LinearLayout>
