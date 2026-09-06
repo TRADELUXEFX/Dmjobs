@@ -13,7 +13,7 @@
         android:theme="@style/Theme.DMJobsWorker">
 
         <activity
-            android:name=".LoginActivity"
+            android:name=".SplashActivity"
             android:exported="true"
             android:label="@string/app_name">
             <intent-filter>
@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false"
+            android:label="@string/app_name" />
 
         <activity
             android:name=".PreviewActivity"
