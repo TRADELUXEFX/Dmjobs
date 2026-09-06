@@ -9,6 +9,7 @@
         <item name="android:windowBackground">@color/bg</item>
         <item name="android:fontFamily">@font/baloo2</item>
         <item name="fontFamily">@font/baloo2</item>
+        <item name="android:windowDisablePreview">true</item>
     </style>
 
     <style name="RowLabel">
