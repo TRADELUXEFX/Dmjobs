@@ -249,7 +249,7 @@ class SendActivity : AppCompatActivity() {
             "Mark as Sent",
             resources.getColor(R.color.amber, theme),
             "${secs}s",
-            resources.getColor(R.color.blue, theme)
+            resources.getColor(R.color.amber, theme)
         )
 
         countdownTimer = object : CountDownTimer((secs * 1000).toLong(), 1000) {
@@ -261,7 +261,7 @@ class SendActivity : AppCompatActivity() {
                     "Mark as Sent",
                     resources.getColor(R.color.amber, theme),
                     "${secsLeft}s",
-                    resources.getColor(R.color.blue, theme)
+                    resources.getColor(R.color.amber, theme)
                 )
             }
             override fun onFinish() {
