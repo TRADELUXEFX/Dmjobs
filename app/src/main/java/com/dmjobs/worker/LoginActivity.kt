@@ -1,6 +1,7 @@
 package com.dmjobs.worker
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
@@ -19,6 +20,7 @@ class LoginActivity : AppCompatActivity() {
     private lateinit var inpJobcode: EditText
     private lateinit var errorText: TextView
     private lateinit var btnLogin: Button
+    private lateinit var btnNoJob: Button
     private lateinit var progress: ProgressBar
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,9 +31,15 @@ class LoginActivity : AppCompatActivity() {
         inpJobcode = findViewById(R.id.inp_jobcode)
         errorText = findViewById(R.id.login_error)
         btnLogin = findViewById(R.id.btn_login)
+        btnNoJob = findViewById(R.id.btn_no_job)
         progress = findViewById(R.id.login_progress)
 
         btnLogin.setOnClickListener { doLogin() }
+        btnNoJob.setOnClickListener {
+            val msg = "Hi, I don't have a job code yet. Please assign me to a job."
+            val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
     }
 
     private fun showError(msg: String) {
