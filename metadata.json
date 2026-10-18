@@ -1,0 +1,6 @@
+{
+  "name": "Dmjobs",
+  "description": "Worker app for WhatsApp direct messaging jobs - claim tasks, send pre-composed messages, and track earnings.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,46 +1,74 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg">
+    android:background="@color/bg"
+    android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="24dp">
+        android:padding="20dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <!-- App Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="32dp"
-            android:layout_marginBottom="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="20dp"
             android:gravity="center"
-            android:text="DM Jobs"
-            android:textColor="@color/green_deep"
-            android:textSize="26sp"
-            android:textStyle="bold" />
+            android:orientation="vertical">
 
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="DM Jobs"
+                android:textColor="@color/green_deep"
+                android:textSize="26sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="WhatsApp Outreach Tasks &amp; Earnings"
+                android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Global Error Bar -->
+        <TextView
+            android:id="@+id/login_error"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:background="@drawable/error_bg"
+            android:gravity="center"
+            android:padding="12dp"
+            android:textColor="@color/red"
+            android:textSize="13sp"
+            android:visibility="gone" />
+
+        <!-- Phone Number Card -->
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="16dp"
-            app:cardElevation="4dp"
-            xmlns:app="http://schemas.android.com/apk/res-auto">
+            app:cardElevation="3dp">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="20dp">
+                android:padding="16dp">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:gravity="center"
-                    android:text="Your Phone Number"
+                    android:text="Your WhatsApp Phone Number"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp"
                     android:textStyle="bold" />
@@ -48,90 +76,240 @@
                 <EditText
                     android:id="@+id/inp_username"
                     android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                    android:layout_height="50dp"
                     android:layout_marginTop="6dp"
                     android:background="@drawable/input_bg"
-                    android:gravity="center"
                     android:hint="e.g. 08012345678"
                     android:inputType="phone"
                     android:maxLength="11"
                     android:paddingHorizontal="14dp"
+                    android:textColor="@color/text"
                     android:textSize="15sp" />
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:gravity="center"
-                    android:text="11 digits, starting with 0 (e.g. 08012345678)"
+                    android:text="11-digit phone number. Your earnings and tasks link to this number."
                     android:textColor="@color/text_muted"
                     android:textSize="11sp" />
 
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- Section: Available Jobs Header -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="8dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:contentDescription="Available Jobs"
+                android:src="@drawable/ic_work" />
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_weight="1"
+                android:text="Available Jobs"
+                android:textColor="@color/text"
+                android:textSize="17sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/jobs_count_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/tag_chip_bg"
+                android:paddingHorizontal="8dp"
+                android:paddingVertical="3dp"
+                android:text="Loading..."
+                android:textColor="@color/text_muted"
+                android:textSize="11sp"
+                android:textStyle="bold" />
+
+            <ImageButton
+                android:id="@+id/btn_refresh_jobs"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_marginStart="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="Refresh jobs"
+                android:padding="6dp"
+                android:src="@drawable/ic_refresh" />
+        </LinearLayout>
+
+        <!-- Loading State for Jobs -->
+        <LinearLayout
+            android:id="@+id/jobs_loading_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp"
+            android:visibility="gone">
+
+            <ProgressBar
+                android:layout_width="32dp"
+                android:layout_height="32dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="Loading available jobs..."
+                android:textColor="@color/text_muted"
+                android:textSize="13sp" />
+        </LinearLayout>
+
+        <!-- Empty State for Jobs -->
+        <androidx.cardview.widget.CardView
+            android:id="@+id/jobs_empty_card"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="6dp"
+            android:visibility="gone"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="vertical"
+                android:padding="24dp">
+
                 <TextView
-                    android:layout_width="match_parent"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="14dp"
-                    android:gravity="center"
-                    android:text="Job Code"
-                    android:textColor="@color/text_muted"
-                    android:textSize="12sp"
+                    android:text="No Available Jobs Right Now"
+                    android:textColor="@color/text"
+                    android:textSize="15sp"
                     android:textStyle="bold" />
 
-                <EditText
-                    android:id="@+id/inp_jobcode"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
-                    android:background="@drawable/input_bg"
                     android:gravity="center"
-                    android:hint="G2XXL3"
-                    android:inputType="textCapCharacters"
-                    android:letterSpacing="0.2"
-                    android:maxLength="8"
-                    android:textSize="16sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:id="@+id/login_error"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/error_bg"
-                    android:gravity="center"
-                    android:padding="10dp"
-                    android:textColor="@color/red"
-                    android:textSize="13sp"
-                    android:visibility="gone" />
+                    android:text="All current batches have been claimed, or new jobs are being prepared. Check back shortly or contact the admin."
+                    android:textColor="@color/text_muted"
+                    android:textSize="12sp" />
 
                 <Button
-                    android:id="@+id/btn_login"
-                    android:layout_width="match_parent"
-                    android:layout_height="52dp"
-                    android:layout_marginTop="16dp"
-                    android:background="@drawable/button_rounded"
-                    android:text="Find My Job"
+                    android:id="@+id/btn_retry_fetch_jobs"
+                    android:layout_width="wrap_content"
+                    android:layout_height="38dp"
+                    android:layout_marginTop="12dp"
+                    android:background="@drawable/button_rounded_secondary"
+                    android:paddingHorizontal="16dp"
+                    android:text="Refresh List"
                     android:textAllCaps="false"
-                    android:textColor="@color/white"
+                    android:textColor="@color/green_deep"
+                    android:textSize="13sp" />
+            </LinearLayout>
+        </androidx.cardview.widget.CardView>
+
+        <!-- RecyclerView for Jobs -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_jobs"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:nestedScrollingEnabled="false" />
+
+        <!-- Optional / Manual Code Input Accordion / Card -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            app:cardBackgroundColor="@color/white"
+            app:cardCornerRadius="16dp"
+            app:cardElevation="2dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Have a private job code?"
+                    android:textColor="@color/text"
+                    android:textSize="13sp"
                     android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="2dp"
+                    android:text="If an admin sent you a direct code not listed above, enter it here:"
+                    android:textColor="@color/text_muted"
+                    android:textSize="11sp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <EditText
+                        android:id="@+id/inp_jobcode"
+                        android:layout_width="0dp"
+                        android:layout_height="48dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/input_bg"
+                        android:gravity="center"
+                        android:hint="e.g. ADEHV6"
+                        android:inputType="textCapCharacters"
+                        android:letterSpacing="0.1"
+                        android:maxLength="10"
+                        android:paddingHorizontal="12dp"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <Button
+                        android:id="@+id/btn_login"
+                        android:layout_width="wrap_content"
+                        android:layout_height="48dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/button_rounded"
+                        android:paddingHorizontal="18dp"
+                        android:text="Open Job"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textStyle="bold" />
+                </LinearLayout>
 
                 <ProgressBar
                     android:id="@+id/login_progress"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
                     android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="12dp"
+                    android:layout_marginTop="10dp"
                     android:visibility="gone" />
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
+        <!-- Help / Admin WhatsApp Contact Button -->
         <Button
             android:id="@+id/btn_no_job"
             android:layout_width="match_parent"
-            android:layout_height="52dp"
+            android:layout_height="50dp"
             android:layout_marginTop="16dp"
+            android:layout_marginBottom="24dp"
             android:background="@drawable/button_rounded_wa"
-            android:text="Don't have a job? Contact admin"
+            android:text="Need Help? Contact Admin on WhatsApp"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textStyle="bold" />

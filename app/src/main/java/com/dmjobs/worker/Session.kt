@@ -44,13 +44,12 @@ object Session {
     fun hasSavedSession(): Boolean = username.isNotEmpty() && job != null
 
     fun reset() {
-        username = ""
         job = null
         currentContact = null
         sentToday = 0
         waOpened = false
         if (initialized) {
-            prefs.edit().clear().apply()
+            prefs.edit().remove(KEY_JOB).apply()
         }
     }
 }
