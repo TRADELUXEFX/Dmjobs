@@ -233,8 +233,12 @@ class LoginActivity : AppCompatActivity() {
             } else {
                 "Hi, I would like to join DM Jobs as a worker. Please assign me to a job."
             }
-            val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
+            try {
+                val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
+                startActivity(Intent(Intent.ACTION_VIEW, uri))
+            } catch (e: Exception) {
+                showGlobalError("Could not open WhatsApp. Please ensure it is installed on this device.")
+            }
         }
     }
 

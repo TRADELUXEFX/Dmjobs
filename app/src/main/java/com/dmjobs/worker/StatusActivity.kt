@@ -171,7 +171,11 @@ class StatusActivity : AppCompatActivity() {
     }
 
     private fun openWhatsApp(message: String) {
-        val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(message)}")
-        startActivity(Intent(Intent.ACTION_VIEW, uri))
+        try {
+            val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(message)}")
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        } catch (_: Exception) {
+            android.widget.Toast.makeText(this, "Could not open WhatsApp. Please ensure it is installed.", android.widget.Toast.LENGTH_SHORT).show()
+        }
     }
 }

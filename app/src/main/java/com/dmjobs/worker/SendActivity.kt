@@ -130,6 +130,22 @@ class SendActivity : AppCompatActivity() {
             try {
                 val jobId = job.getString("id")
 
+                // Sync today's real sent count with server
+                val serverSent = withContext(Dispatchers.IO) {
+                    try {
+                        Supabase.countSentToday(Session.username, jobId)
+                    } catch (_: Exception) {
+                        Session.sentToday
+                    }
+                }
+                Session.sentToday = maxOf(Session.sentToday, serverSent)
+                updateProgress()
+
+                if (Session.sentToday >= limit) {
+                    blockWorker()
+                    return@launch
+                }
+
                 // Resume an already-locked contact if one exists (e.g. after app restart)
                 val existing = withContext(Dispatchers.IO) {
                     Supabase.select(
@@ -232,7 +248,12 @@ class SendActivity : AppCompatActivity() {
         val msg = Session.job?.optString("message", "") ?: ""
         val uri = Uri.parse("https://wa.me/$phone?text=${Uri.encode(msg)}")
 
-        startActivity(Intent(Intent.ACTION_VIEW, uri))
+        try {
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        } catch (e: Exception) {
+            showError("Could not open WhatsApp. Please ensure WhatsApp is installed.")
+            return
+        }
 
         waOpened = true
         setChip("opened")
