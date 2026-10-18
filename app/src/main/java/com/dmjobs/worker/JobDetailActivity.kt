@@ -27,7 +27,6 @@ class JobDetailActivity : AppCompatActivity() {
     private lateinit var detailDailyEarning: TextView
     private lateinit var detailDelayText: TextView
     private lateinit var reqTimerTitle: TextView
-    private lateinit var reqTimerDesc: TextView
     private lateinit var detailMessagePreview: TextView
     private lateinit var inpDetailPhone: EditText
     private lateinit var detailErrorText: TextView
@@ -70,7 +69,6 @@ class JobDetailActivity : AppCompatActivity() {
         detailDailyEarning = findViewById(R.id.detail_daily_earning)
         detailDelayText = findViewById(R.id.detail_delay_text)
         reqTimerTitle = findViewById(R.id.req_timer_title)
-        reqTimerDesc = findViewById(R.id.req_timer_desc)
         detailMessagePreview = findViewById(R.id.detail_message_preview)
         inpDetailPhone = findViewById(R.id.inp_detail_phone)
         detailErrorText = findViewById(R.id.detail_error_text)
@@ -137,10 +135,8 @@ class JobDetailActivity : AppCompatActivity() {
             "Daily limit: $maxPerDay DMs"
         }
 
-        detailDelayText.text = "⏱ ${delay}s delay between sends"
-        reqTimerTitle.text = "Follow Anti-Spam Rate Limit (${delay}s delay)"
-        reqTimerDesc.text = "Strictly observe the mandatory ${delay}-second countdown timer before marking each message as sent."
-
+        detailDelayText.text = "⏱ ${delay}s pause"
+        reqTimerTitle.text = "Observe countdown timer between sends (${delay}s delay)"
         detailMessagePreview.text = message
     }
 
@@ -275,6 +271,17 @@ class JobDetailActivity : AppCompatActivity() {
     private fun setLoading(loading: Boolean) {
         btnAcceptJob.isEnabled = !loading
         btnBack.isEnabled = !loading
-        detailProgress.visibility = if (loading) View.VISIBLE else View.GONE
+        if (loading) {
+            btnAcceptJob.text = ""
+            detailProgress.visibility = View.VISIBLE
+        } else {
+            val status = job?.optString("display_status", "Available")
+            btnAcceptJob.text = when (status) {
+                "In Progress" -> "Continue Working This Job"
+                "Completed" -> "View Completed Campaign"
+                else -> "Accept & Start Campaign"
+            }
+            detailProgress.visibility = View.GONE
+        }
     }
 }

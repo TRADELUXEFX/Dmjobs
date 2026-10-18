@@ -1,25 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginHorizontal="2dp"
     android:layout_marginVertical="6dp"
+    android:clickable="true"
+    android:focusable="true"
     app:cardBackgroundColor="@color/white"
-    app:cardCornerRadius="16dp"
-    app:cardElevation="2dp">
+    app:cardCornerRadius="20dp"
+    app:cardElevation="0dp"
+    app:cardPreventCornerOverlap="true"
+    app:rippleColor="#1A075E54"
+    app:strokeColor="#E2E8F0"
+    app:strokeWidth="1.5dp">
 
     <LinearLayout
         android:id="@+id/job_card_clickable"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/job_card_bg"
-        android:clickable="true"
-        android:focusable="true"
         android:orientation="vertical"
         android:padding="16dp">
 
-        <!-- Top row: Job Title and Pay Badge -->
+        <!-- Top row: Job Title and Status Pill -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -32,17 +35,39 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:ellipsize="end"
-                android:maxLines="2"
-                android:text="WhatsApp Ads Test"
+                android:maxLines="1"
+                android:text="WhatsApp Outreach"
                 android:textColor="@color/text"
                 android:textSize="17sp"
                 android:textStyle="bold" />
 
             <TextView
-                android:id="@+id/job_item_pay"
+                android:id="@+id/job_item_status"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
+                android:background="@drawable/pay_badge_bg"
+                android:paddingHorizontal="10dp"
+                android:paddingVertical="4dp"
+                android:text="Available"
+                android:textColor="#15803D"
+                android:textSize="12sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Metric Badges Row: Pay Pill & Key Details -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <!-- High-contrast Pay Pill -->
+            <TextView
+                android:id="@+id/job_item_pay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:background="@drawable/pay_badge_bg"
                 android:paddingHorizontal="10dp"
                 android:paddingVertical="5dp"
@@ -50,88 +75,70 @@
                 android:textColor="#15803D"
                 android:textSize="13sp"
                 android:textStyle="bold" />
-        </LinearLayout>
 
-        <!-- Chips Row: Job Code & Cooldown -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/job_item_status"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/pay_badge_bg"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
-                android:text="Available"
-                android:textColor="#15803D"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
+            <!-- Code Tag -->
             <TextView
                 android:id="@+id/job_item_code"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:background="@drawable/tag_chip_bg"
                 android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
-                android:text="CODE: ADEHV6"
+                android:paddingVertical="4dp"
+                android:text="ADEHV6"
                 android:textColor="@color/text_muted"
                 android:textSize="11sp"
                 android:textStyle="bold" />
 
+            <!-- Cooldown Tag -->
             <TextView
                 android:id="@+id/job_item_cooldown"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:background="@drawable/tag_chip_bg"
                 android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
-                android:text="⏱ 5s delay"
+                android:paddingVertical="4dp"
+                android:text="5s pause"
                 android:textColor="@color/text_muted"
                 android:textSize="11sp" />
 
+            <!-- Contacts Tag -->
             <TextView
                 android:id="@+id/job_item_contacts"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
+                android:layout_marginStart="6dp"
                 android:background="@drawable/tag_chip_bg"
                 android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
+                android:paddingVertical="4dp"
                 android:text="30 contacts"
                 android:textColor="@color/text_muted"
                 android:textSize="11sp" />
         </LinearLayout>
 
-        <!-- Daily potential row -->
+        <!-- Daily Potential Summary -->
         <TextView
             android:id="@+id/job_item_daily_potential"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:text="Daily limit: 3 DMs/day (Earn up to ₦600/day)"
+            android:text="Earn up to ₦600/day (3 DMs limit)"
             android:textColor="@color/text_muted"
             android:textSize="13sp" />
 
-        <!-- Action Button -->
+        <!-- Tap Action Button -->
         <Button
             android:id="@+id/btn_select_job"
             android:layout_width="match_parent"
             android:layout_height="44dp"
             android:layout_marginTop="12dp"
             android:background="@drawable/button_rounded"
-            android:text="Select This Job →"
+            android:text="View Details &amp; Apply →"
             android:textAllCaps="false"
             android:textColor="@color/white"
             android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
-</androidx.cardview.widget.CardView>
+</com.google.android.material.card.MaterialCardView>

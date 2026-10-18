@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="@color/white"
-        android:elevation="2dp"
+        android:elevation="1dp"
         android:gravity="center_vertical"
         android:paddingHorizontal="16dp">
 
@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_weight="1"
-            android:text="Job Details"
+            android:text="Campaign Details"
             android:textColor="@color/text"
             android:textSize="18sp"
             android:textStyle="bold" />
@@ -38,9 +38,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:background="@drawable/pay_badge_bg"
-            android:paddingHorizontal="10dp"
-            android:paddingVertical="4dp"
-            android:text="Active"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="5dp"
+            android:text="Available"
             android:textColor="#15803D"
             android:textSize="12sp"
             android:textStyle="bold" />
@@ -51,15 +51,20 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:fillViewport="true">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical"
-            android:padding="16dp">
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="14dp">
 
-            <!-- Title & Code -->
+            <!-- Title & Code Badge -->
             <TextView
                 android:id="@+id/detail_title"
                 android:layout_width="match_parent"
@@ -96,19 +101,23 @@
                     android:background="@drawable/tag_chip_bg"
                     android:paddingHorizontal="10dp"
                     android:paddingVertical="4dp"
-                    android:text="Checking available contacts..."
+                    android:text="Available"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp" />
             </LinearLayout>
 
-            <!-- Earnings & Rate Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Earnings Grid Card (Clean 20dp Curved MaterialCardView) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginTop="14dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -119,18 +128,19 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="PAY &amp; EARNINGS POTENTIAL"
+                        android:text="EARNINGS &amp; PACING"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
-                    <!-- Top highlight: Pay per DM & Daily Cap -->
+                    <!-- Stat Tiles Row -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
+                        android:layout_marginTop="10dp"
                         android:orientation="horizontal">
 
+                        <!-- Tile 1: Pay per DM -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
@@ -142,7 +152,7 @@
                             <TextView
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
-                                android:text="Pay per Message"
+                                android:text="Pay / DM"
                                 android:textColor="#15803D"
                                 android:textSize="11sp"
                                 android:textStyle="bold" />
@@ -158,10 +168,11 @@
                                 android:textStyle="bold" />
                         </LinearLayout>
 
+                        <!-- Tile 2: Daily Limit -->
                         <LinearLayout
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
                             android:background="@drawable/tag_chip_bg"
                             android:orientation="vertical"
@@ -180,14 +191,14 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginTop="2dp"
-                                android:text="3 DMs/day"
+                                android:text="3 DMs"
                                 android:textColor="@color/text"
                                 android:textSize="20sp"
                                 android:textStyle="bold" />
                         </LinearLayout>
                     </LinearLayout>
 
-                    <!-- Breakdown row -->
+                    <!-- Summary Footnote -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
@@ -209,22 +220,25 @@
                             android:id="@+id/detail_delay_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="⏱ 5s delay between sends"
+                            android:text="⏱ 5s pause"
                             android:textColor="@color/text_muted"
                             android:textSize="12sp" />
                     </LinearLayout>
-
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Job Requirements Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Rules Card (Concise 3-Bullet Points) -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginTop="8dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -235,180 +249,99 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="JOB REQUIREMENTS"
+                        android:text="TASK GUIDELINES"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp"
                         android:textStyle="bold" />
 
-                    <!-- Requirement 1: Active WhatsApp -->
+                    <!-- Rule 1 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="top"
+                        android:layout_marginTop="10dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:contentDescription="Check"
                             android:src="@drawable/ic_check_circle" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Active WhatsApp App"
-                                android:textColor="@color/text"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="You must have WhatsApp installed on this phone with a valid working number."
-                                android:textColor="@color/text_muted"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                            android:text="Active WhatsApp installed on this device"
+                            android:textColor="@color/text"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
-                    <!-- Requirement 2: Cooldown Timer -->
+                    <!-- Rule 2 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="top"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:contentDescription="Check"
                             android:src="@drawable/ic_check_circle" />
 
-                        <LinearLayout
+                        <TextView
+                            android:id="@+id/req_timer_title"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:id="@+id/req_timer_title"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Follow Anti-Spam Rate Limit"
-                                android:textColor="@color/text"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:id="@+id/req_timer_desc"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Strictly observe the mandatory countdown delay before marking each message as sent."
-                                android:textColor="@color/text_muted"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                            android:text="Observe countdown timer between sends"
+                            android:textColor="@color/text"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
-                    <!-- Requirement 3: Exact Message Text -->
+                    <!-- Rule 3 -->
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="top"
+                        android:layout_marginTop="8dp"
+                        android:gravity="center_vertical"
                         android:orientation="horizontal">
 
                         <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginTop="2dp"
+                            android:layout_width="16dp"
+                            android:layout_height="16dp"
                             android:contentDescription="Check"
                             android:src="@drawable/ic_check_circle" />
 
-                        <LinearLayout
+                        <TextView
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
+                            android:layout_marginStart="8dp"
                             android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Preserve Message Template"
-                                android:textColor="@color/text"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Do not edit, shorten, or alter the campaign promotional text when dispatching."
-                                android:textColor="@color/text_muted"
-                                android:textSize="12sp" />
-                        </LinearLayout>
-                    </LinearLayout>
-
-                    <!-- Requirement 4: Mark as Sent -->
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="12dp"
-                        android:gravity="top"
-                        android:orientation="horizontal">
-
-                        <ImageView
-                            android:layout_width="18dp"
-                            android:layout_height="18dp"
-                            android:layout_marginTop="2dp"
-                            android:contentDescription="Check"
-                            android:src="@drawable/ic_check_circle" />
-
-                        <LinearLayout
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="10dp"
-                            android:layout_weight="1"
-                            android:orientation="vertical">
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Mark as Sent in App"
-                                android:textColor="@color/text"
-                                android:textSize="13sp"
-                                android:textStyle="bold" />
-
-                            <TextView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="Return to this app after opening WhatsApp to log each message for admin verification."
-                                android:textColor="@color/text_muted"
-                                android:textSize="12sp" />
-                        </LinearLayout>
+                            android:text="Send exact template and tap 'Mark as Sent'"
+                            android:textColor="@color/text"
+                            android:textSize="13sp" />
                     </LinearLayout>
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Message Preview Card -->
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginTop="8dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -419,7 +352,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="OUTREACH MESSAGE TEMPLATE"
+                        android:text="MESSAGE PREVIEW"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -428,33 +361,28 @@
                         android:id="@+id/detail_message_preview"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
+                        android:layout_marginTop="8dp"
                         android:background="@drawable/message_box_bg"
                         android:padding="12dp"
                         android:text="Hello..."
                         android:textColor="@color/text"
                         android:textSize="13sp" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="6dp"
-                        android:text="The app automatically pre-populates this message when you tap 'Open WhatsApp'."
-                        android:textColor="@color/text_muted"
-                        android:textSize="11sp" />
-
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
-            <!-- Worker Phone Input Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Worker Phone Input & Action Card -->
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="8dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="16dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -465,7 +393,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="WORKER IDENTIFICATION"
+                        android:text="YOUR WHATSAPP PHONE NUMBER"
                         android:textColor="@color/text_muted"
                         android:textSize="11sp"
                         android:textStyle="bold" />
@@ -473,17 +401,8 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="4dp"
-                        android:text="Enter Your WhatsApp Phone Number"
-                        android:textColor="@color/text"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
-
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
                         android:layout_marginTop="2dp"
-                        android:text="Your task completions, earnings, and approval status will be recorded under this phone number."
+                        android:text="Approvals and earnings track directly to this number."
                         android:textColor="@color/text_muted"
                         android:textSize="12sp" />
 
@@ -498,7 +417,7 @@
                         android:maxLength="11"
                         android:paddingHorizontal="14dp"
                         android:textColor="@color/text"
-                        android:textSize="16sp" />
+                        android:textSize="15sp" />
 
                     <TextView
                         android:id="@+id/detail_error_text"
@@ -509,31 +428,37 @@
                         android:gravity="center"
                         android:padding="10dp"
                         android:textColor="@color/red"
-                        android:textSize="13sp"
+                        android:textSize="12sp"
                         android:visibility="gone" />
 
-                    <ProgressBar
-                        android:id="@+id/detail_progress"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_gravity="center_horizontal"
-                        android:layout_marginTop="12dp"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/btn_accept_job"
+                    <!-- ACTION BUTTON WITH INLINE CENTERED SPINNER -->
+                    <FrameLayout
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
-                        android:layout_marginTop="14dp"
-                        android:background="@drawable/button_rounded"
-                        android:text="Accept &amp; Start Campaign"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:layout_marginTop="14dp">
+
+                        <Button
+                            android:id="@+id/btn_accept_job"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/button_rounded"
+                            android:text="Accept &amp; Start Campaign"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <ProgressBar
+                            android:id="@+id/detail_progress"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:indeterminateTint="@color/white"
+                            android:visibility="gone" />
+                    </FrameLayout>
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
         </LinearLayout>
     </ScrollView>

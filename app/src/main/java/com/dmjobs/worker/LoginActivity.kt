@@ -482,6 +482,12 @@ class LoginActivity : AppCompatActivity() {
 
     private fun setCodeLoading(loading: Boolean) {
         btnVerifyCode.isEnabled = !loading
-        codeProgress.visibility = if (loading) View.VISIBLE else View.GONE
+        if (loading) {
+            btnVerifyCode.text = ""
+            codeProgress.visibility = View.VISIBLE
+        } else {
+            btnVerifyCode.text = "Find & Select Job"
+            codeProgress.visibility = View.GONE
+        }
     }
 }

@@ -4,27 +4,35 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/bg"
+    android:clipChildren="false"
+    android:clipToPadding="false"
     android:fillViewport="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:clipChildren="false"
+        android:clipToPadding="false"
         android:orientation="vertical"
-        android:padding="16dp">
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="12dp">
 
         <!-- App Brand Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="12dp"
+            android:layout_marginTop="16dp"
             android:layout_marginBottom="16dp"
-            android:gravity="center"
+            android:gravity="center_horizontal"
             android:orientation="vertical">
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
                 android:text="DM Jobs"
+                android:textAlignment="center"
                 android:textColor="@color/green_deep"
                 android:textSize="26sp"
                 android:textStyle="bold" />
@@ -32,10 +40,13 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:text="Choose an outreach campaign and earn per WhatsApp message"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
+                android:text="Choose an outreach campaign"
+                android:textAlignment="center"
                 android:textColor="@color/text_muted"
-                android:textSize="12sp" />
+                android:textSize="14sp" />
         </LinearLayout>
 
         <!-- Global Notification/Error Banner -->
@@ -57,9 +68,10 @@
             android:layout_width="match_parent"
             android:layout_height="48dp"
             android:layout_marginBottom="14dp"
-            android:background="@drawable/tag_chip_bg"
+            android:background="@drawable/tab_container_bg"
             app:tabGravity="fill"
             app:tabIndicatorColor="@color/green_deep"
+            app:tabIndicatorFullWidth="false"
             app:tabIndicatorHeight="3dp"
             app:tabMode="fixed"
             app:tabRippleColor="#1A075E54"
@@ -85,6 +97,8 @@
             android:id="@+id/layout_browse_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical"
             android:visibility="visible">
 
@@ -98,12 +112,12 @@
                 <!-- Search Input Container -->
                 <LinearLayout
                     android:layout_width="0dp"
-                    android:layout_height="46dp"
+                    android:layout_height="48dp"
                     android:layout_weight="1"
                     android:background="@drawable/search_input_bg"
                     android:gravity="center_vertical"
                     android:orientation="horizontal"
-                    android:paddingHorizontal="12dp">
+                    android:paddingHorizontal="14dp">
 
                     <ImageView
                         android:layout_width="18dp"
@@ -139,12 +153,12 @@
                 <!-- Refresh Button -->
                 <ImageButton
                     android:id="@+id/btn_refresh_jobs"
-                    android:layout_width="44dp"
-                    android:layout_height="44dp"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
                     android:layout_marginStart="8dp"
                     android:background="@drawable/search_input_bg"
                     android:contentDescription="Refresh available jobs"
-                    android:padding="12dp"
+                    android:padding="13dp"
                     android:src="@drawable/ic_refresh" />
             </LinearLayout>
 
@@ -153,7 +167,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginBottom="6dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:scrollbars="none">
 
                 <LinearLayout
@@ -166,47 +182,47 @@
                     <Button
                         android:id="@+id/btn_filter_available"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="38dp"
                         android:background="@drawable/chip_filter_selected"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
-                        android:paddingHorizontal="16dp"
+                        android:paddingHorizontal="18dp"
                         android:text="Available"
                         android:textAllCaps="false"
                         android:textColor="@color/white"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <!-- Filter 2: In Progress -->
                     <Button
                         android:id="@+id/btn_filter_in_progress"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="38dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/chip_filter_unselected"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
-                        android:paddingHorizontal="16dp"
+                        android:paddingHorizontal="18dp"
                         android:text="In Progress"
                         android:textAllCaps="false"
                         android:textColor="@color/text_muted"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
 
                     <!-- Filter 3: Completed -->
                     <Button
                         android:id="@+id/btn_filter_completed"
                         android:layout_width="wrap_content"
-                        android:layout_height="36dp"
+                        android:layout_height="38dp"
                         android:layout_marginStart="8dp"
                         android:background="@drawable/chip_filter_unselected"
                         android:minWidth="0dp"
                         android:minHeight="0dp"
-                        android:paddingHorizontal="16dp"
+                        android:paddingHorizontal="18dp"
                         android:text="Completed"
                         android:textAllCaps="false"
                         android:textColor="@color/text_muted"
-                        android:textSize="12sp"
+                        android:textSize="13sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </HorizontalScrollView>
@@ -215,8 +231,8 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:layout_marginBottom="4dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="6dp"
                 android:gravity="center_vertical"
                 android:orientation="horizontal">
 
@@ -242,38 +258,43 @@
 
                 <ProgressBar
                     android:layout_width="32dp"
-                    android:layout_height="32dp" />
+                    android:layout_height="32dp"
+                    android:indeterminateTint="@color/green_deep" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="8dp"
-                    android:text="Loading active campaigns..."
+                    android:layout_marginTop="10dp"
+                    android:text="Loading campaigns..."
                     android:textColor="@color/text_muted"
                     android:textSize="13sp" />
             </LinearLayout>
 
-            <!-- Empty State Card -->
-            <androidx.cardview.widget.CardView
+            <!-- Empty State Card (MaterialCardView with full unclipped curves) -->
+            <com.google.android.material.card.MaterialCardView
                 android:id="@+id/jobs_empty_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginVertical="10dp"
                 android:visibility="gone"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="2dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:gravity="center"
                     android:orientation="vertical"
-                    android:padding="24dp">
+                    android:padding="26dp">
 
                     <ImageView
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
+                        android:layout_width="44dp"
+                        android:layout_height="44dp"
                         android:alpha="0.4"
                         android:contentDescription="No jobs"
                         android:src="@drawable/ic_work" />
@@ -285,7 +306,7 @@
                         android:layout_marginTop="12dp"
                         android:text="No Campaigns Available"
                         android:textColor="@color/text"
-                        android:textSize="15sp"
+                        android:textSize="16sp"
                         android:textStyle="bold" />
 
                     <TextView
@@ -294,30 +315,32 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="6dp"
                         android:gravity="center"
-                        android:text="All open batches are currently assigned or being prepared. Check back shortly or contact the administrator."
+                        android:text="Check back shortly or contact the administrator."
                         android:textColor="@color/text_muted"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
 
                     <Button
                         android:id="@+id/btn_retry_fetch_jobs"
                         android:layout_width="wrap_content"
                         android:layout_height="40dp"
-                        android:layout_marginTop="14dp"
+                        android:layout_marginTop="16dp"
                         android:background="@drawable/button_rounded_secondary"
-                        android:paddingHorizontal="16dp"
+                        android:paddingHorizontal="20dp"
                         android:text="Refresh List"
                         android:textAllCaps="false"
                         android:textColor="@color/green_deep"
-                        android:textSize="13sp" />
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
 
             <!-- Jobs List -->
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/recycler_jobs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="4dp"
+                android:clipChildren="false"
+                android:clipToPadding="false"
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
@@ -329,15 +352,22 @@
             android:id="@+id/layout_code_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:clipChildren="false"
+            android:clipToPadding="false"
             android:orientation="vertical"
             android:visibility="gone">
 
-            <androidx.cardview.widget.CardView
+            <com.google.android.material.card.MaterialCardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="2dp"
+                android:layout_marginVertical="6dp"
                 app:cardBackgroundColor="@color/white"
-                app:cardCornerRadius="16dp"
-                app:cardElevation="3dp">
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="true"
+                app:strokeColor="#E2E8F0"
+                app:strokeWidth="1.5dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -369,20 +399,20 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:gravity="center"
-                        android:text="If an admin sent you a private or custom job code, type it below to load your batch."
+                        android:text="Type your assigned job code below to open your batch."
                         android:textColor="@color/text_muted"
-                        android:textSize="12sp" />
+                        android:textSize="13sp" />
 
                     <EditText
                         android:id="@+id/inp_manual_jobcode"
                         android:layout_width="match_parent"
                         android:layout_height="52dp"
-                        android:layout_marginTop="20dp"
+                        android:layout_marginTop="18dp"
                         android:background="@drawable/input_bg"
                         android:gravity="center"
                         android:hint="e.g. ADEHV6"
                         android:inputType="textCapCharacters"
-                        android:letterSpacing="0.2"
+                        android:letterSpacing="0.15"
                         android:maxLength="10"
                         android:paddingHorizontal="14dp"
                         android:textColor="@color/text"
@@ -401,35 +431,42 @@
                         android:textSize="12sp"
                         android:visibility="gone" />
 
-                    <ProgressBar
-                        android:id="@+id/code_progress"
-                        android:layout_width="28dp"
-                        android:layout_height="28dp"
-                        android:layout_marginTop="12dp"
-                        android:visibility="gone" />
-
-                    <Button
-                        android:id="@+id/btn_verify_code"
+                    <!-- ACTION BUTTON WITH INLINE CENTERED SPINNER -->
+                    <FrameLayout
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_marginTop="16dp"
-                        android:background="@drawable/button_rounded"
-                        android:text="Find &amp; Select Job"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textSize="15sp"
-                        android:textStyle="bold" />
+                        android:layout_height="52dp"
+                        android:layout_marginTop="18dp">
+
+                        <Button
+                            android:id="@+id/btn_verify_code"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:background="@drawable/button_rounded"
+                            android:text="Find &amp; Select Job"
+                            android:textAllCaps="false"
+                            android:textColor="@color/white"
+                            android:textSize="15sp"
+                            android:textStyle="bold" />
+
+                        <ProgressBar
+                            android:id="@+id/code_progress"
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:layout_gravity="center"
+                            android:indeterminateTint="@color/white"
+                            android:visibility="gone" />
+                    </FrameLayout>
 
                 </LinearLayout>
-            </androidx.cardview.widget.CardView>
+            </com.google.android.material.card.MaterialCardView>
         </LinearLayout>
 
         <!-- Help / Admin Contact Button -->
         <Button
             android:id="@+id/btn_no_job"
             android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_marginTop="20dp"
+            android:layout_height="52dp"
+            android:layout_marginTop="18dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/button_rounded_wa"
             android:text="Need a Job Code? Contact Admin"

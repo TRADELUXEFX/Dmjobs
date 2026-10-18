@@ -50,9 +50,9 @@ class JobsAdapter(
 
             txtTitle.text = if (title.isNotBlank()) title else "Campaign $code"
             txtPay.text = if (pay > 0) "₦${"%,.0f".format(pay)} / DM" else "Paid DM"
-            txtCode.text = "CODE: $code"
-            txtCooldown.text = "⏱ ${delay}s delay"
-            txtContacts.text = if (contacts > 0) "$contacts contacts" else "Available"
+            txtCode.text = code
+            txtCooldown.text = "${delay}s pause"
+            txtContacts.text = if (contacts > 0) "$contacts contacts" else "Open batch"
 
             val displayStatus = job.optString("display_status", "Available")
             txtStatus.text = displayStatus
@@ -60,25 +60,25 @@ class JobsAdapter(
                 "In Progress" -> {
                     txtStatus.setBackgroundResource(R.drawable.badge_amber_bg)
                     txtStatus.setTextColor(android.graphics.Color.parseColor("#B45309"))
-                    btnSelect.text = "View In-Progress Job →"
+                    btnSelect.text = "Continue Working →"
                 }
                 "Completed" -> {
                     txtStatus.setBackgroundResource(R.drawable.badge_slate_bg)
                     txtStatus.setTextColor(android.graphics.Color.parseColor("#64748B"))
-                    btnSelect.text = "View Completed Job →"
+                    btnSelect.text = "View Details →"
                 }
                 else -> {
                     txtStatus.setBackgroundResource(R.drawable.pay_badge_bg)
                     txtStatus.setTextColor(android.graphics.Color.parseColor("#15803D"))
-                    btnSelect.text = "Select This Job →"
+                    btnSelect.text = "View Details & Apply →"
                 }
             }
 
             val dailyPotential = pay * maxPerDay
             txtDaily.text = if (dailyPotential > 0) {
-                "Daily limit: $maxPerDay DMs/day (Earn up to ₦${"%,.0f".format(dailyPotential)}/day)"
+                "Earn up to ₦${"%,.0f".format(dailyPotential)}/day ($maxPerDay DMs cap)"
             } else {
-                "Daily limit: $maxPerDay DMs/day"
+                "Daily limit: $maxPerDay DMs"
             }
 
             val clickListener = View.OnClickListener {
