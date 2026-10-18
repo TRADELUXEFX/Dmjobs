@@ -33,6 +33,7 @@ class JobsAdapter(
         private val cardClickable: View = itemView.findViewById(R.id.job_card_clickable)
         private val txtTitle: TextView = itemView.findViewById(R.id.job_item_title)
         private val txtPay: TextView = itemView.findViewById(R.id.job_item_pay)
+        private val txtStatus: TextView = itemView.findViewById(R.id.job_item_status)
         private val txtCode: TextView = itemView.findViewById(R.id.job_item_code)
         private val txtCooldown: TextView = itemView.findViewById(R.id.job_item_cooldown)
         private val txtContacts: TextView = itemView.findViewById(R.id.job_item_contacts)
@@ -52,6 +53,26 @@ class JobsAdapter(
             txtCode.text = "CODE: $code"
             txtCooldown.text = "⏱ ${delay}s delay"
             txtContacts.text = if (contacts > 0) "$contacts contacts" else "Available"
+
+            val displayStatus = job.optString("display_status", "Available")
+            txtStatus.text = displayStatus
+            when (displayStatus) {
+                "In Progress" -> {
+                    txtStatus.setBackgroundResource(R.drawable.badge_amber_bg)
+                    txtStatus.setTextColor(android.graphics.Color.parseColor("#B45309"))
+                    btnSelect.text = "View In-Progress Job →"
+                }
+                "Completed" -> {
+                    txtStatus.setBackgroundResource(R.drawable.badge_slate_bg)
+                    txtStatus.setTextColor(android.graphics.Color.parseColor("#64748B"))
+                    btnSelect.text = "View Completed Job →"
+                }
+                else -> {
+                    txtStatus.setBackgroundResource(R.drawable.pay_badge_bg)
+                    txtStatus.setTextColor(android.graphics.Color.parseColor("#15803D"))
+                    btnSelect.text = "Select This Job →"
+                }
+            }
 
             val dailyPotential = pay * maxPerDay
             txtDaily.text = if (dailyPotential > 0) {

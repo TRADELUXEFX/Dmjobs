@@ -1,8 +1,11 @@
 package com.dmjobs.worker
 
 import android.content.Intent
+import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
@@ -13,31 +16,54 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import org.json.JSONArray
 import org.json.JSONObject
 
 class LoginActivity : AppCompatActivity() {
 
-    private lateinit var inpUsername: EditText
-    private lateinit var inpJobcode: EditText
-    private lateinit var errorText: TextView
-    private lateinit var btnLogin: Button
-    private lateinit var btnNoJob: Button
-    private lateinit var progress: ProgressBar
+    // Tab layout & containers
+    private lateinit var tabLayout: TabLayout
+    private lateinit var layoutBrowseSection: View
+    private lateinit var layoutCodeSection: View
 
-    // Available jobs views
-    private lateinit var recyclerJobs: RecyclerView
+    // Global Error
+    private lateinit var globalErrorText: TextView
+
+    // Browse Jobs Tab Views
+    private lateinit var inpSearchJobs: EditText
+    private lateinit var btnClearSearch: ImageButton
+    private lateinit var btnRefreshJobs: ImageButton
+
+    // Filter Buttons (Available, In Progress, Completed)
+    private lateinit var btnFilterAvailable: Button
+    private lateinit var btnFilterInProgress: Button
+    private lateinit var btnFilterCompleted: Button
+    private var currentFilter: String = "Available"
+
+    private lateinit var jobsCountBadge: TextView
     private lateinit var jobsLoadingContainer: View
     private lateinit var jobsEmptyCard: View
-    private lateinit var jobsCountBadge: TextView
-    private lateinit var btnRefreshJobs: ImageButton
+    private lateinit var emptyTitle: TextView
+    private lateinit var emptyDesc: TextView
     private lateinit var btnRetryFetchJobs: Button
+    private lateinit var recyclerJobs: RecyclerView
 
+    // Enter Code Tab Views
+    private lateinit var inpManualJobcode: EditText
+    private lateinit var codeErrorText: TextView
+    private lateinit var codeProgress: ProgressBar
+    private lateinit var btnVerifyCode: Button
+
+    // Common Footer
+    private lateinit var btnNoJob: Button
+
+    // Data & Adapter
     private lateinit var jobsAdapter: JobsAdapter
-    private val availableJobs = mutableListOf<JSONObject>()
+    private val allJobs = mutableListOf<JSONObject>()
+    private val displayedJobs = mutableListOf<JSONObject>()
     private var isFetchingJobs = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,50 +72,15 @@ class LoginActivity : AppCompatActivity() {
 
         Session.init(this)
 
-        inpUsername = findViewById(R.id.inp_username)
-        inpJobcode = findViewById(R.id.inp_jobcode)
-        errorText = findViewById(R.id.login_error)
-        btnLogin = findViewById(R.id.btn_login)
-        btnNoJob = findViewById(R.id.btn_no_job)
-        progress = findViewById(R.id.login_progress)
+        initViews()
+        setupTabs()
+        setupSearch()
+        setupFilters()
+        setupRecyclerView()
+        setupListeners()
 
-        recyclerJobs = findViewById(R.id.recycler_jobs)
-        jobsLoadingContainer = findViewById(R.id.jobs_loading_container)
-        jobsEmptyCard = findViewById(R.id.jobs_empty_card)
-        jobsCountBadge = findViewById(R.id.jobs_count_badge)
-        btnRefreshJobs = findViewById(R.id.btn_refresh_jobs)
-        btnRetryFetchJobs = findViewById(R.id.btn_retry_fetch_jobs)
-
-        // Pre-fill phone number if worker has used the app before
-        if (Session.username.isNotEmpty()) {
-            inpUsername.setText(Session.username)
-        }
-
-        // Setup Jobs RecyclerView
-        jobsAdapter = JobsAdapter(availableJobs) { selectedJob ->
-            onJobClicked(selectedJob)
-        }
-        recyclerJobs.layoutManager = LinearLayoutManager(this)
-        recyclerJobs.adapter = jobsAdapter
-
-        // Button handlers
-        btnLogin.setOnClickListener { doManualLogin() }
-        btnRefreshJobs.setOnClickListener { fetchAvailableJobs() }
-        btnRetryFetchJobs.setOnClickListener { fetchAvailableJobs() }
-        btnNoJob.setOnClickListener {
-            val phone = inpUsername.text.toString().trim()
-            val msg = if (phone.isNotEmpty()) {
-                "Hi, I'm worker $phone. Please assign me to an outreach job."
-            } else {
-                "Hi, I want to start working on DM Jobs. Please assign me to a job."
-            }
-            val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
-            startActivity(Intent(Intent.ACTION_VIEW, uri))
-        }
-
-        // Resume a saved session if active
+        // Check if there is already an active session to resume
         if (Session.hasSavedSession()) {
-            setLoading(true)
             resumeSavedSession()
         } else {
             fetchAvailableJobs()
@@ -98,10 +89,160 @@ class LoginActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // If not currently logged into an active job, refresh available jobs list
-        if (!Session.hasSavedSession() && availableJobs.isEmpty()) {
+        // If returning without an active session and list is empty, refresh
+        if (!Session.hasSavedSession() && allJobs.isEmpty()) {
             fetchAvailableJobs()
         }
+    }
+
+    private fun initViews() {
+        tabLayout = findViewById(R.id.tab_layout)
+        layoutBrowseSection = findViewById(R.id.layout_browse_section)
+        layoutCodeSection = findViewById(R.id.layout_code_section)
+        globalErrorText = findViewById(R.id.login_error)
+
+        inpSearchJobs = findViewById(R.id.inp_search_jobs)
+        btnClearSearch = findViewById(R.id.btn_clear_search)
+        btnRefreshJobs = findViewById(R.id.btn_refresh_jobs)
+
+        btnFilterAvailable = findViewById(R.id.btn_filter_available)
+        btnFilterInProgress = findViewById(R.id.btn_filter_in_progress)
+        btnFilterCompleted = findViewById(R.id.btn_filter_completed)
+
+        jobsCountBadge = findViewById(R.id.jobs_count_badge)
+        jobsLoadingContainer = findViewById(R.id.jobs_loading_container)
+        jobsEmptyCard = findViewById(R.id.jobs_empty_card)
+        emptyTitle = findViewById(R.id.empty_title)
+        emptyDesc = findViewById(R.id.empty_desc)
+        btnRetryFetchJobs = findViewById(R.id.btn_retry_fetch_jobs)
+        recyclerJobs = findViewById(R.id.recycler_jobs)
+
+        inpManualJobcode = findViewById(R.id.inp_manual_jobcode)
+        codeErrorText = findViewById(R.id.code_error_text)
+        codeProgress = findViewById(R.id.code_progress)
+        btnVerifyCode = findViewById(R.id.btn_verify_code)
+
+        btnNoJob = findViewById(R.id.btn_no_job)
+    }
+
+    private fun setupTabs() {
+        tabLayout.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
+            override fun onTabSelected(tab: TabLayout.Tab?) {
+                when (tab?.position) {
+                    0 -> {
+                        layoutBrowseSection.visibility = View.VISIBLE
+                        layoutCodeSection.visibility = View.GONE
+                        showGlobalError("")
+                    }
+                    1 -> {
+                        layoutBrowseSection.visibility = View.GONE
+                        layoutCodeSection.visibility = View.VISIBLE
+                        showGlobalError("")
+                    }
+                }
+            }
+
+            override fun onTabUnselected(tab: TabLayout.Tab?) {}
+            override fun onTabReselected(tab: TabLayout.Tab?) {}
+        })
+    }
+
+    private fun setupSearch() {
+        inpSearchJobs.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                val query = s?.toString()?.trim() ?: ""
+                btnClearSearch.visibility = if (query.isNotEmpty()) View.VISIBLE else View.GONE
+                filterJobs(query)
+            }
+            override fun afterTextChanged(s: Editable?) {}
+        })
+
+        btnClearSearch.setOnClickListener {
+            inpSearchJobs.setText("")
+        }
+    }
+
+    private fun setupFilters() {
+        btnFilterAvailable.setOnClickListener {
+            setFilter("Available")
+        }
+        btnFilterInProgress.setOnClickListener {
+            setFilter("In Progress")
+        }
+        btnFilterCompleted.setOnClickListener {
+            setFilter("Completed")
+        }
+    }
+
+    private fun setFilter(filter: String) {
+        currentFilter = filter
+        updateFilterButtonStyles()
+        filterJobs(inpSearchJobs.text.toString().trim())
+    }
+
+    private fun updateFilterButtonStyles() {
+        val mutedColor = resources.getColor(R.color.text_muted, theme)
+        val whiteColor = Color.WHITE
+
+        if (currentFilter == "Available") {
+            btnFilterAvailable.setBackgroundResource(R.drawable.chip_filter_selected)
+            btnFilterAvailable.setTextColor(whiteColor)
+        } else {
+            btnFilterAvailable.setBackgroundResource(R.drawable.chip_filter_unselected)
+            btnFilterAvailable.setTextColor(mutedColor)
+        }
+
+        if (currentFilter == "In Progress") {
+            btnFilterInProgress.setBackgroundResource(R.drawable.chip_filter_selected)
+            btnFilterInProgress.setTextColor(whiteColor)
+        } else {
+            btnFilterInProgress.setBackgroundResource(R.drawable.chip_filter_unselected)
+            btnFilterInProgress.setTextColor(mutedColor)
+        }
+
+        if (currentFilter == "Completed") {
+            btnFilterCompleted.setBackgroundResource(R.drawable.chip_filter_selected)
+            btnFilterCompleted.setTextColor(whiteColor)
+        } else {
+            btnFilterCompleted.setBackgroundResource(R.drawable.chip_filter_unselected)
+            btnFilterCompleted.setTextColor(mutedColor)
+        }
+    }
+
+    private fun setupRecyclerView() {
+        jobsAdapter = JobsAdapter(displayedJobs) { selectedJob ->
+            openJobDetail(selectedJob)
+        }
+        recyclerJobs.layoutManager = LinearLayoutManager(this)
+        recyclerJobs.adapter = jobsAdapter
+    }
+
+    private fun setupListeners() {
+        btnRefreshJobs.setOnClickListener { fetchAvailableJobs() }
+        btnRetryFetchJobs.setOnClickListener { fetchAvailableJobs() }
+
+        btnVerifyCode.setOnClickListener {
+            verifyManualCode()
+        }
+
+        btnNoJob.setOnClickListener {
+            val phone = Session.username
+            val msg = if (phone.isNotEmpty()) {
+                "Hi, I'm worker $phone. Please assign me to a WhatsApp outreach job."
+            } else {
+                "Hi, I would like to join DM Jobs as a worker. Please assign me to a job."
+            }
+            val uri = Uri.parse("https://wa.me/${Supabase.ADMIN_PHONE}?text=${Uri.encode(msg)}")
+            startActivity(Intent(Intent.ACTION_VIEW, uri))
+        }
+    }
+
+    private fun openJobDetail(job: JSONObject) {
+        val intent = Intent(this, JobDetailActivity::class.java).apply {
+            putExtra("job_json", job.toString())
+        }
+        startActivity(intent)
     }
 
     private fun fetchAvailableJobs() {
@@ -111,190 +252,161 @@ class LoginActivity : AppCompatActivity() {
         jobsLoadingContainer.visibility = View.VISIBLE
         jobsEmptyCard.visibility = View.GONE
         recyclerJobs.visibility = View.GONE
-        jobsCountBadge.text = "Loading..."
+        jobsCountBadge.text = "Loading campaigns..."
+        showGlobalError("")
 
         lifecycleScope.launch {
             try {
                 val jobsArray = withContext(Dispatchers.IO) {
                     try {
-                        // First attempt: fetch active jobs ordered by creation/id
-                        val active = Supabase.select("wdmj_jobs", "status=eq.active&order=id.desc&select=*")
-                        if (active.length() > 0) active
-                        else Supabase.select("wdmj_jobs", "order=id.desc&select=*")
+                        Supabase.select("wdmj_jobs", "order=id.desc&select=*")
                     } catch (_: Exception) {
                         Supabase.select("wdmj_jobs", "select=*")
                     }
                 }
 
-                availableJobs.clear()
+                allJobs.clear()
                 for (i in 0 until jobsArray.length()) {
                     val job = jobsArray.getJSONObject(i)
-                    // Only include active or open jobs
-                    val status = job.optString("status", "active")
-                    if (status != "inactive" && status != "archived") {
-                        availableJobs.add(job)
+                    val jobId = job.optString("id", "")
+                    val jobStatus = job.optString("status", "active").lowercase()
+
+                    val pendingCount = withContext(Dispatchers.IO) {
+                        try {
+                            Supabase.select("wdmj_contacts", "job_id=eq.$jobId&status=eq.pending&select=id&limit=1").length()
+                        } catch (_: Exception) { 1 }
                     }
+                    val lockedCount = withContext(Dispatchers.IO) {
+                        try {
+                            Supabase.select("wdmj_contacts", "job_id=eq.$jobId&status=eq.locked&select=id&limit=1").length()
+                        } catch (_: Exception) { 0 }
+                    }
+
+                    // Categorize as Available, In Progress, or Completed
+                    val displayStatus = when {
+                        jobStatus == "completed" || jobStatus == "archived" -> "Completed"
+                        pendingCount > 0 -> "Available"
+                        lockedCount > 0 -> "In Progress"
+                        else -> "Completed"
+                    }
+
+                    job.put("display_status", displayStatus)
+                    job.put("pending_count", pendingCount)
+                    job.put("locked_count", lockedCount)
+
+                    allJobs.add(job)
                 }
 
+                // Update filter button labels with real counts
+                val availableCount = allJobs.count { it.optString("display_status") == "Available" }
+                val inProgressCount = allJobs.count { it.optString("display_status") == "In Progress" }
+                val completedCount = allJobs.count { it.optString("display_status") == "Completed" }
+
+                btnFilterAvailable.text = "Available ($availableCount)"
+                btnFilterInProgress.text = "In Progress ($inProgressCount)"
+                btnFilterCompleted.text = "Completed ($completedCount)"
+
                 jobsLoadingContainer.visibility = View.GONE
-                if (availableJobs.isEmpty()) {
-                    jobsEmptyCard.visibility = View.VISIBLE
-                    recyclerJobs.visibility = View.GONE
-                    jobsCountBadge.text = "0 open"
-                } else {
-                    jobsEmptyCard.visibility = View.GONE
-                    recyclerJobs.visibility = View.VISIBLE
-                    jobsAdapter.updateJobs(availableJobs)
-                    jobsCountBadge.text = "${availableJobs.size} open"
-                }
+                filterJobs(inpSearchJobs.text.toString().trim())
+
             } catch (e: Exception) {
                 jobsLoadingContainer.visibility = View.GONE
                 jobsEmptyCard.visibility = View.VISIBLE
+                emptyTitle.text = "Could Not Load Campaigns"
+                emptyDesc.text = e.message ?: "Please check your network connection and tap below to retry."
                 recyclerJobs.visibility = View.GONE
                 jobsCountBadge.text = "Offline"
-                showError("Could not refresh jobs: ${e.message ?: "Network error"}")
             } finally {
                 isFetchingJobs = false
             }
         }
     }
 
-    private fun onJobClicked(job: JSONObject) {
-        val phoneInput = inpUsername.text.toString().trim()
-        showError("")
+    private fun filterJobs(query: String) {
+        displayedJobs.clear()
+        val q = query.lowercase()
 
-        if (phoneInput.isEmpty()) {
-            showError("Please enter your 11-digit phone number above to start this job.")
-            inpUsername.requestFocus()
-            return
+        for (job in allJobs) {
+            val status = job.optString("display_status", "Available")
+            val matchesFilter = (status == currentFilter)
+
+            val title = job.optString("title", "").lowercase()
+            val code = job.optString("job_code", "").lowercase()
+            val msg = job.optString("message", "").lowercase()
+            val matchesSearch = q.isEmpty() || title.contains(q) || code.contains(q) || msg.contains(q)
+
+            if (matchesFilter && matchesSearch) {
+                displayedJobs.add(job)
+            }
         }
 
-        val cleanPhone = phoneInput.replace(" ", "")
-        if (!Regex("^\\d{11}$").matches(cleanPhone)) {
-            showError("Enter a valid 11-digit phone number (e.g. 08012345678).")
-            inpUsername.requestFocus()
-            return
-        }
+        jobsAdapter.updateJobs(displayedJobs)
 
-        // Auto-fill the manual code field for reference
-        val code = job.optString("job_code", "")
-        if (code.isNotEmpty()) {
-            inpJobcode.setText(code)
-        }
+        if (displayedJobs.isEmpty()) {
+            jobsEmptyCard.visibility = View.VISIBLE
+            recyclerJobs.visibility = View.GONE
 
-        startJobWithPhone(cleanPhone, job)
+            if (query.isNotEmpty()) {
+                emptyTitle.text = "No Matching $currentFilter Jobs"
+                emptyDesc.text = "No $currentFilter campaigns matched \"$query\". Try clearing or changing your search."
+                jobsCountBadge.text = "0 matches in $currentFilter"
+            } else {
+                when (currentFilter) {
+                    "Available" -> {
+                        emptyTitle.text = "No Available Campaigns"
+                        emptyDesc.text = "All active campaigns are currently in progress or completed. Check back soon for newly posted batches!"
+                    }
+                    "In Progress" -> {
+                        emptyTitle.text = "No In-Progress Campaigns"
+                        emptyDesc.text = "There are no campaigns undergoing active messaging right now."
+                    }
+                    "Completed" -> {
+                        emptyTitle.text = "No Completed Campaigns"
+                        emptyDesc.text = "Completed campaigns will be displayed here once all contacts have been delivered."
+                    }
+                }
+                jobsCountBadge.text = "0 $currentFilter"
+            }
+        } else {
+            jobsEmptyCard.visibility = View.GONE
+            recyclerJobs.visibility = View.VISIBLE
+            val s = if (displayedJobs.size == 1) "" else "s"
+            jobsCountBadge.text = "${displayedJobs.size} $currentFilter campaign$s"
+        }
     }
 
-    private fun doManualLogin() {
-        val username = inpUsername.text.toString().trim()
-        val code = inpJobcode.text.toString().trim().uppercase()
-        showError("")
+    private fun verifyManualCode() {
+        val code = inpManualJobcode.text.toString().trim().uppercase()
+        showCodeError("")
 
-        if (username.isEmpty()) { showError("Please enter your phone number."); return }
-        if (code.isEmpty()) { showError("Please enter a job code or choose a job above."); return }
-        val cleanPhone = username.replace(" ", "")
-        if (!Regex("^\\d{11}$").matches(cleanPhone)) {
-            showError("Enter a valid 11-digit phone number (e.g. 08012345678).")
+        if (code.isEmpty()) {
+            showCodeError("Please enter a campaign job code.")
             return
         }
-        if (code.length < 4) { showError("Job code looks too short. Check and try again."); return }
+        if (code.length < 4) {
+            showCodeError("Job code is too short. Please check and try again.")
+            return
+        }
 
-        setLoading(true)
+        setCodeLoading(true)
         lifecycleScope.launch {
             try {
                 val jobs = withContext(Dispatchers.IO) {
                     Supabase.select("wdmj_jobs", "job_code=eq.$code&select=*")
                 }
+                setCodeLoading(false)
+
                 if (jobs.length() == 0) {
-                    showError("No job found for code \"$code\". Double-check or select one above.")
-                    setLoading(false)
-                    return@launch
-                }
-                val job = jobs.getJSONObject(0)
-                startJobWithPhone(cleanPhone, job)
-            } catch (e: Exception) {
-                showError(e.message ?: "Failed to find job. Please try again.")
-                setLoading(false)
-            }
-        }
-    }
-
-    private fun startJobWithPhone(cleanPhone: String, job: JSONObject) {
-        setLoading(true)
-        lifecycleScope.launch {
-            try {
-                Session.username = cleanPhone
-                Session.job = job
-                Session.persist()
-
-                val jobId = job.getString("id")
-
-                // 1. Check if banned across ANY job
-                val banCheck = withContext(Dispatchers.IO) {
-                    Supabase.select(
-                        "wdmj_worker_status",
-                        "phone=eq.$cleanPhone&status=eq.banned&select=status&limit=1"
-                    )
-                }
-                if (banCheck.length() > 0) {
-                    startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
-                        putExtra("mode", "banned")
-                    })
-                    setLoading(false)
+                    showCodeError("No campaign found for code \"$code\". Double-check with your admin.")
                     return@launch
                 }
 
-                // 2. Check worker status for this specific job
-                val statusRows = withContext(Dispatchers.IO) {
-                    Supabase.select(
-                        "wdmj_worker_status",
-                        "phone=eq.$cleanPhone&job_id=eq.$jobId&select=status"
-                    )
-                }
-
-                if (statusRows.length() > 0) {
-                    val status = statusRows.getJSONObject(0).getString("status")
-                    when (status) {
-                        "pending" -> {
-                            startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
-                                putExtra("mode", "pending")
-                            })
-                            setLoading(false)
-                            return@launch
-                        }
-                        "blocked" -> {
-                            startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
-                                putExtra("mode", "blocked")
-                            })
-                            setLoading(false)
-                            return@launch
-                        }
-                        // "active" — fall through to preview
-                    }
-                } else {
-                    // First time on this job — register as pending
-                    withContext(Dispatchers.IO) {
-                        val body = JSONObject().apply {
-                            put("phone", cleanPhone)
-                            put("job_id", jobId)
-                            put("status", "pending")
-                        }
-                        Supabase.insert("wdmj_worker_status", body)
-                    }
-                    startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
-                        putExtra("mode", "pending")
-                    })
-                    setLoading(false)
-                    return@launch
-                }
-
-                // Active — go directly to preview
-                startActivity(Intent(this@LoginActivity, PreviewActivity::class.java))
-                setLoading(false)
+                val matchedJob = jobs.getJSONObject(0)
+                openJobDetail(matchedJob)
 
             } catch (e: Exception) {
-                showError(e.message ?: "Something went wrong. Please try again.")
-                setLoading(false)
+                setCodeLoading(false)
+                showCodeError(e.message ?: "Failed to verify code. Try again.")
             }
         }
     }
@@ -303,7 +415,7 @@ class LoginActivity : AppCompatActivity() {
         val job = Session.job ?: return
         val phone = Session.username
         val jobId = job.optString("id", "")
-        if (jobId.isEmpty()) { setLoading(false); fetchAvailableJobs(); return }
+        if (jobId.isEmpty()) { fetchAvailableJobs(); return }
 
         lifecycleScope.launch {
             try {
@@ -317,7 +429,6 @@ class LoginActivity : AppCompatActivity() {
                     startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
                         putExtra("mode", "banned")
                     })
-                    setLoading(false)
                     return@launch
                 }
 
@@ -335,14 +446,12 @@ class LoginActivity : AppCompatActivity() {
                             startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
                                 putExtra("mode", "pending")
                             })
-                            setLoading(false)
                             return@launch
                         }
                         "blocked" -> {
                             startActivity(Intent(this@LoginActivity, StatusActivity::class.java).apply {
                                 putExtra("mode", "blocked")
                             })
-                            setLoading(false)
                             return@launch
                         }
                     }
@@ -350,23 +459,25 @@ class LoginActivity : AppCompatActivity() {
 
                 // Active — go straight back to sending
                 startActivity(Intent(this@LoginActivity, SendActivity::class.java))
-                setLoading(false)
 
             } catch (e: Exception) {
-                // Fall back to login screen with available jobs
-                setLoading(false)
                 fetchAvailableJobs()
             }
         }
     }
 
-    private fun showError(msg: String) {
-        errorText.text = msg
-        errorText.visibility = if (msg.isEmpty()) View.GONE else View.VISIBLE
+    private fun showGlobalError(msg: String) {
+        globalErrorText.text = msg
+        globalErrorText.visibility = if (msg.isEmpty()) View.GONE else View.VISIBLE
     }
 
-    private fun setLoading(on: Boolean) {
-        btnLogin.isEnabled = !on
-        progress.visibility = if (on) View.VISIBLE else View.GONE
+    private fun showCodeError(msg: String) {
+        codeErrorText.text = msg
+        codeErrorText.visibility = if (msg.isEmpty()) View.GONE else View.VISIBLE
+    }
+
+    private fun setCodeLoading(loading: Boolean) {
+        btnVerifyCode.isEnabled = !loading
+        codeProgress.visibility = if (loading) View.VISIBLE else View.GONE
     }
 }

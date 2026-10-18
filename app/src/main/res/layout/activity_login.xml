@@ -10,14 +10,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
-        android:padding="20dp">
+        android:padding="16dp">
 
-        <!-- App Header -->
+        <!-- App Brand Header -->
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:layout_marginBottom="20dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -33,285 +33,409 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="2dp"
-                android:text="WhatsApp Outreach Tasks &amp; Earnings"
+                android:text="Choose an outreach campaign and earn per WhatsApp message"
                 android:textColor="@color/text_muted"
-                android:textSize="13sp" />
+                android:textSize="12sp" />
         </LinearLayout>
 
-        <!-- Global Error Bar -->
+        <!-- Global Notification/Error Banner -->
         <TextView
             android:id="@+id/login_error"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="12dp"
             android:background="@drawable/error_bg"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="10dp"
             android:textColor="@color/red"
             android:textSize="13sp"
             android:visibility="gone" />
 
-        <!-- Phone Number Card -->
-        <androidx.cardview.widget.CardView
+        <!-- Navigation Tabs: Browse Jobs vs Enter Code -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
+            android:layout_height="48dp"
+            android:layout_marginBottom="14dp"
+            android:background="@drawable/tag_chip_bg"
+            app:tabGravity="fill"
+            app:tabIndicatorColor="@color/green_deep"
+            app:tabIndicatorHeight="3dp"
+            app:tabMode="fixed"
+            app:tabRippleColor="#1A075E54"
+            app:tabSelectedTextColor="@color/green_deep"
+            app:tabTextAppearance="@android:style/TextAppearance.Widget.TabWidget"
+            app:tabTextColor="@color/text_muted">
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Browse Jobs" />
+
+            <com.google.android.material.tabs.TabItem
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Enter Job Code" />
+        </com.google.android.material.tabs.TabLayout>
+
+        <!-- ============================================== -->
+        <!-- TAB 1: BROWSE JOBS SECTION                     -->
+        <!-- ============================================== -->
+        <LinearLayout
+            android:id="@+id/layout_browse_section"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="3dp">
+            android:orientation="vertical"
+            android:visibility="visible">
 
+            <!-- Search and Refresh Row -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Search Input Container -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="46dp"
+                    android:layout_weight="1"
+                    android:background="@drawable/search_input_bg"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp">
+
+                    <ImageView
+                        android:layout_width="18dp"
+                        android:layout_height="18dp"
+                        android:contentDescription="Search"
+                        android:src="@drawable/ic_search" />
+
+                    <EditText
+                        android:id="@+id/inp_search_jobs"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="8dp"
+                        android:layout_weight="1"
+                        android:background="@android:color/transparent"
+                        android:hint="Search jobs by name or code..."
+                        android:imeOptions="actionSearch"
+                        android:inputType="text"
+                        android:maxLines="1"
+                        android:textColor="@color/text"
+                        android:textSize="14sp" />
+
+                    <ImageButton
+                        android:id="@+id/btn_clear_search"
+                        android:layout_width="24dp"
+                        android:layout_height="24dp"
+                        android:background="?attr/selectableItemBackgroundBorderless"
+                        android:contentDescription="Clear"
+                        android:src="@android:drawable/ic_menu_close_clear_cancel"
+                        android:visibility="gone"
+                        app:tint="@color/text_muted" />
+                </LinearLayout>
+
+                <!-- Refresh Button -->
+                <ImageButton
+                    android:id="@+id/btn_refresh_jobs"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_marginStart="8dp"
+                    android:background="@drawable/search_input_bg"
+                    android:contentDescription="Refresh available jobs"
+                    android:padding="12dp"
+                    android:src="@drawable/ic_refresh" />
+            </LinearLayout>
+
+            <!-- Filter Toggle Row: Available, In Progress, Completed -->
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="4dp"
+                android:scrollbars="none">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <!-- Filter 1: Available -->
+                    <Button
+                        android:id="@+id/btn_filter_available"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:background="@drawable/chip_filter_selected"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="16dp"
+                        android:text="Available"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <!-- Filter 2: In Progress -->
+                    <Button
+                        android:id="@+id/btn_filter_in_progress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/chip_filter_unselected"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="16dp"
+                        android:text="In Progress"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+
+                    <!-- Filter 3: Completed -->
+                    <Button
+                        android:id="@+id/btn_filter_completed"
+                        android:layout_width="wrap_content"
+                        android:layout_height="36dp"
+                        android:layout_marginStart="8dp"
+                        android:background="@drawable/chip_filter_unselected"
+                        android:minWidth="0dp"
+                        android:minHeight="0dp"
+                        android:paddingHorizontal="16dp"
+                        android:text="Completed"
+                        android:textAllCaps="false"
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp"
+                        android:textStyle="bold" />
+                </LinearLayout>
+            </HorizontalScrollView>
+
+            <!-- Results Count Bar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginBottom="4dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:layout_width="match_parent"
+                    android:id="@+id/jobs_count_badge"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Your WhatsApp Phone Number"
+                    android:text="Available Campaigns"
                     android:textColor="@color/text_muted"
                     android:textSize="12sp"
                     android:textStyle="bold" />
-
-                <EditText
-                    android:id="@+id/inp_username"
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:layout_marginTop="6dp"
-                    android:background="@drawable/input_bg"
-                    android:hint="e.g. 08012345678"
-                    android:inputType="phone"
-                    android:maxLength="11"
-                    android:paddingHorizontal="14dp"
-                    android:textColor="@color/text"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="4dp"
-                    android:text="11-digit phone number. Your earnings and tasks link to this number."
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp" />
-
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- Section: Available Jobs Header -->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="24dp"
-            android:layout_marginBottom="8dp"
-            android:gravity="center_vertical"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="20dp"
-                android:layout_height="20dp"
-                android:contentDescription="Available Jobs"
-                android:src="@drawable/ic_work" />
-
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_weight="1"
-                android:text="Available Jobs"
-                android:textColor="@color/text"
-                android:textSize="17sp"
-                android:textStyle="bold" />
-
-            <TextView
-                android:id="@+id/jobs_count_badge"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/tag_chip_bg"
-                android:paddingHorizontal="8dp"
-                android:paddingVertical="3dp"
-                android:text="Loading..."
-                android:textColor="@color/text_muted"
-                android:textSize="11sp"
-                android:textStyle="bold" />
-
-            <ImageButton
-                android:id="@+id/btn_refresh_jobs"
-                android:layout_width="36dp"
-                android:layout_height="36dp"
-                android:layout_marginStart="6dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="Refresh jobs"
-                android:padding="6dp"
-                android:src="@drawable/ic_refresh" />
-        </LinearLayout>
-
-        <!-- Loading State for Jobs -->
-        <LinearLayout
-            android:id="@+id/jobs_loading_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:orientation="vertical"
-            android:padding="24dp"
-            android:visibility="gone">
-
-            <ProgressBar
-                android:layout_width="32dp"
-                android:layout_height="32dp" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                android:text="Loading available jobs..."
-                android:textColor="@color/text_muted"
-                android:textSize="13sp" />
-        </LinearLayout>
-
-        <!-- Empty State for Jobs -->
-        <androidx.cardview.widget.CardView
-            android:id="@+id/jobs_empty_card"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginVertical="6dp"
-            android:visibility="gone"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
-
+            <!-- Loading Indicator -->
             <LinearLayout
+                android:id="@+id/jobs_loading_container"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:orientation="vertical"
-                android:padding="24dp">
+                android:padding="32dp"
+                android:visibility="gone">
+
+                <ProgressBar
+                    android:layout_width="32dp"
+                    android:layout_height="32dp" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="No Available Jobs Right Now"
-                    android:textColor="@color/text"
-                    android:textSize="15sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="6dp"
-                    android:gravity="center"
-                    android:text="All current batches have been claimed, or new jobs are being prepared. Check back shortly or contact the admin."
+                    android:layout_marginTop="8dp"
+                    android:text="Loading active campaigns..."
                     android:textColor="@color/text_muted"
-                    android:textSize="12sp" />
-
-                <Button
-                    android:id="@+id/btn_retry_fetch_jobs"
-                    android:layout_width="wrap_content"
-                    android:layout_height="38dp"
-                    android:layout_marginTop="12dp"
-                    android:background="@drawable/button_rounded_secondary"
-                    android:paddingHorizontal="16dp"
-                    android:text="Refresh List"
-                    android:textAllCaps="false"
-                    android:textColor="@color/green_deep"
                     android:textSize="13sp" />
             </LinearLayout>
-        </androidx.cardview.widget.CardView>
 
-        <!-- RecyclerView for Jobs -->
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/recycler_jobs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:nestedScrollingEnabled="false" />
-
-        <!-- Optional / Manual Code Input Accordion / Card -->
-        <androidx.cardview.widget.CardView
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            app:cardBackgroundColor="@color/white"
-            app:cardCornerRadius="16dp"
-            app:cardElevation="2dp">
-
-            <LinearLayout
+            <!-- Empty State Card -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/jobs_empty_card"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:padding="16dp">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="Have a private job code?"
-                    android:textColor="@color/text"
-                    android:textSize="13sp"
-                    android:textStyle="bold" />
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="2dp"
-                    android:text="If an admin sent you a direct code not listed above, enter it here:"
-                    android:textColor="@color/text_muted"
-                    android:textSize="11sp" />
+                android:layout_marginVertical="8dp"
+                android:visibility="gone"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:gravity="center_vertical"
-                    android:orientation="horizontal">
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:alpha="0.4"
+                        android:contentDescription="No jobs"
+                        android:src="@drawable/ic_work" />
+
+                    <TextView
+                        android:id="@+id/empty_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="12dp"
+                        android:text="No Campaigns Available"
+                        android:textColor="@color/text"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/empty_desc"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="6dp"
+                        android:gravity="center"
+                        android:text="All open batches are currently assigned or being prepared. Check back shortly or contact the administrator."
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/btn_retry_fetch_jobs"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:layout_marginTop="14dp"
+                        android:background="@drawable/button_rounded_secondary"
+                        android:paddingHorizontal="16dp"
+                        android:text="Refresh List"
+                        android:textAllCaps="false"
+                        android:textColor="@color/green_deep"
+                        android:textSize="13sp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- Jobs List -->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_jobs"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+
+        <!-- ============================================== -->
+        <!-- TAB 2: ENTER CODE SECTION                      -->
+        <!-- ============================================== -->
+        <LinearLayout
+            android:id="@+id/layout_code_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:visibility="gone">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardBackgroundColor="@color/white"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="3dp">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_horizontal"
+                    android:orientation="vertical"
+                    android:padding="24dp">
+
+                    <ImageView
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:background="@drawable/pay_badge_bg"
+                        android:contentDescription="Job Code"
+                        android:padding="12dp"
+                        android:src="@drawable/ic_key"
+                        app:tint="@color/green_deep" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="14dp"
+                        android:text="Enter Private Campaign Code"
+                        android:textColor="@color/text"
+                        android:textSize="17sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="4dp"
+                        android:gravity="center"
+                        android:text="If an admin sent you a private or custom job code, type it below to load your batch."
+                        android:textColor="@color/text_muted"
+                        android:textSize="12sp" />
 
                     <EditText
-                        android:id="@+id/inp_jobcode"
-                        android:layout_width="0dp"
-                        android:layout_height="48dp"
-                        android:layout_weight="1"
+                        android:id="@+id/inp_manual_jobcode"
+                        android:layout_width="match_parent"
+                        android:layout_height="52dp"
+                        android:layout_marginTop="20dp"
                         android:background="@drawable/input_bg"
                         android:gravity="center"
                         android:hint="e.g. ADEHV6"
                         android:inputType="textCapCharacters"
-                        android:letterSpacing="0.1"
+                        android:letterSpacing="0.2"
                         android:maxLength="10"
-                        android:paddingHorizontal="12dp"
+                        android:paddingHorizontal="14dp"
+                        android:textColor="@color/text"
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/code_error_text"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:background="@drawable/error_bg"
+                        android:gravity="center"
+                        android:padding="10dp"
+                        android:textColor="@color/red"
+                        android:textSize="12sp"
+                        android:visibility="gone" />
+
+                    <ProgressBar
+                        android:id="@+id/code_progress"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_marginTop="12dp"
+                        android:visibility="gone" />
+
+                    <Button
+                        android:id="@+id/btn_verify_code"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:layout_marginTop="16dp"
+                        android:background="@drawable/button_rounded"
+                        android:text="Find &amp; Select Job"
+                        android:textAllCaps="false"
+                        android:textColor="@color/white"
                         android:textSize="15sp"
                         android:textStyle="bold" />
 
-                    <Button
-                        android:id="@+id/btn_login"
-                        android:layout_width="wrap_content"
-                        android:layout_height="48dp"
-                        android:layout_marginStart="8dp"
-                        android:background="@drawable/button_rounded"
-                        android:paddingHorizontal="18dp"
-                        android:text="Open Job"
-                        android:textAllCaps="false"
-                        android:textColor="@color/white"
-                        android:textStyle="bold" />
                 </LinearLayout>
+            </androidx.cardview.widget.CardView>
+        </LinearLayout>
 
-                <ProgressBar
-                    android:id="@+id/login_progress"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_gravity="center_horizontal"
-                    android:layout_marginTop="10dp"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-        </androidx.cardview.widget.CardView>
-
-        <!-- Help / Admin WhatsApp Contact Button -->
+        <!-- Help / Admin Contact Button -->
         <Button
             android:id="@+id/btn_no_job"
             android:layout_width="match_parent"
             android:layout_height="50dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="20dp"
             android:layout_marginBottom="24dp"
             android:background="@drawable/button_rounded_wa"
-            android:text="Need Help? Contact Admin on WhatsApp"
+            android:text="Need a Job Code? Contact Admin"
             android:textAllCaps="false"
             android:textColor="@color/white"
+            android:textSize="14sp"
             android:textStyle="bold" />
 
     </LinearLayout>
